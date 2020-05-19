@@ -268,7 +268,11 @@ namespace RegionStructure
 
             // Rarefact the adjacency matrix
             List<int> rared = new List<int>();
-            List<int> tmpAdj = new List<int>(regionsNum);
+            List<int> tmpAdj = new List<int>();
+            for (int k = 0; k < regionsNum; ++k)
+            {
+                tmpAdj.Add(0);
+            }
             bool nextDeletion = true;
             int counter = 0;
 
