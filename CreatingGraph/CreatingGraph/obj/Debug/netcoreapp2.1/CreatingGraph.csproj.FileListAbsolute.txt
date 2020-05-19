@@ -1,0 +1,11 @@
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\bin\Debug\netcoreapp2.1\CreatingGraph.deps.json
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\bin\Debug\netcoreapp2.1\CreatingGraph.runtimeconfig.json
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\bin\Debug\netcoreapp2.1\CreatingGraph.runtimeconfig.dev.json
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\bin\Debug\netcoreapp2.1\CreatingGraph.dll
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\bin\Debug\netcoreapp2.1\CreatingGraph.pdb
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.csprojAssemblyReference.cache
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.csproj.CoreCompileInputs.cache
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.AssemblyInfoInputs.cache
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.AssemblyInfo.cs
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.dll
+D:\Учеба\DiceWars\CreatingGraph\CreatingGraph\obj\Debug\netcoreapp2.1\CreatingGraph.pdb
