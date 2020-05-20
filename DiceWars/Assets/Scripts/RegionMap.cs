@@ -105,6 +105,7 @@ namespace RegionStructure
                 {
                     // Решаем, разрастись ему, или нет
                     probab = Random.Range(1, 5) % 4;
+                    probab = 1;
                     if (probab != 0)
                     {
                         growthFront[ind] = 2;
@@ -280,6 +281,7 @@ namespace RegionStructure
             {
                 int regToDel = Random.Range(0, regionsNum);
                 bool itWas = rared.Any(item => item == regToDel);
+
                 if (!itWas)
                 {
                     // Try to zeroficate all edges
@@ -334,13 +336,31 @@ namespace RegionStructure
                 {
                     nextDeletion = false;
                 }
-                if (rared.Count >= regionsNum * rarePercent / 100) ;
+                if (rared.Count >= regionsNum * rarePercent / 100)
                 {
                     nextDeletion = false;
                 }
             }
 
+            // Теперь всем тайлам, которые принадлежат регионам, которых "выключили из карты" припишем
+            // regionAssign[i] = -1
+            for (int i = 0; i < regionAssign.Length; ++i)
+            {
+                if(rared.Contains(regionAssign[i]))
+                {
+                    regionAssign[i] = -1;
+                }
 
+            }
+
+            /*
+            Debug.Log("Rared regions: " + rared.Count.ToString());
+            foreach (int num in rared)
+            {
+                Debug.Log("Region #: " + num.ToString());
+            }
+            */
+            
             //Debug.Log("End of region growth");
         }
 

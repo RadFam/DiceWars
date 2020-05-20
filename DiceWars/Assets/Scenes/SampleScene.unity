@@ -590,6 +590,7 @@ MonoBehaviour:
   deltaXTile: 24
   deltaYTile: 19
   regionsNum: 100
+  rarePercent: 40
 --- !u!1 &911430749
 GameObject:
   m_ObjectHideFlags: 0

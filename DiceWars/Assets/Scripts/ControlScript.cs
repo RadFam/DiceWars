@@ -9,7 +9,7 @@ public class ControlScript : MonoBehaviour
     public Grid tileGrid;
     public List<Tile> allTiles;
     public List<Tile> borderTiles;
-    public Tile redTile;
+    //public Tile redTile;
     public Tilemap gameTilemap;
     public List<Tilemap> borderTilemaps;
     private Vector3Int position;
@@ -36,7 +36,7 @@ public class ControlScript : MonoBehaviour
         TileData td = new TileData();
         //tile.GetTileData(position, gameTilemap, ref td);
         //Debug.Log("Tile.sprite: " + tile.sprite.name);
-        gameTilemap.SetTile(position, redTile);
+        //gameTilemap.SetTile(position, redTile);
     }
 
     void Update()
@@ -72,7 +72,15 @@ public class ControlScript : MonoBehaviour
         {
             type = regType[i];
             type2 = (float)type;
-            hexColor = new Color(type2 / RM.regionsNum, 1.0f, 1.0f);            
+            if (type != -1)
+            {
+                hexColor = new Color(type2 / RM.regionsNum, 1.0f, 1.0f);
+            }
+            else
+            {
+                hexColor = new Color(0.0f, 0.0f, 1.0f);
+            }
+                        
             gameTilemap.SetTile(regCoord[i], allTiles[6]);
             gameTilemap.SetTileFlags(regCoord[i], TileFlags.None);
             gameTilemap.SetColor(regCoord[i], hexColor);
@@ -83,24 +91,26 @@ public class ControlScript : MonoBehaviour
         Vector3Int tmpVct;
         for (int i = 0; i < regCoord.Length; ++i)
         {
-            border[0] = 0; border[1] = 0; border[2] = 0; border[3] = 0; border[4] = 0; border[5] = 0;
-
-            bool toStop = false;
-
-
-            RM.HasTileBorder(i, ref border);
-            for (int j = 0; j < 6; ++j)
+            if (regType[i] != -1)
             {
-                if (border[j] == 1)
-                {
-                    tmpVct = new Vector3Int(regCoord[i].x, regCoord[i].y, -1-j);
-                    //gameTilemap.SetTile(tmpVct, borderTiles[j]);
-                    borderTilemaps[j].SetTile(regCoord[i], borderTiles[j]);
+                border[0] = 0; border[1] = 0; border[2] = 0; border[3] = 0; border[4] = 0; border[5] = 0;
 
-                    toStop = true;
-                    //Debug.Log("Neib: " + j.ToString() + "  tile coord: " + regCoord[i]);
+                RM.HasTileBorder(i, ref border);
+                for (int j = 0; j < 6; ++j)
+                {
+                    if (border[j] == 1)
+                    {
+                        tmpVct = new Vector3Int(regCoord[i].x, regCoord[i].y, -1 - j);
+                        //gameTilemap.SetTile(tmpVct, borderTiles[j]);
+                        borderTilemaps[j].SetTile(regCoord[i], borderTiles[j]);
+                    }
                 }
             }
         }
+    }
+
+    public void InitiatePlayerDistribution()
+    {
+
     }
 }
