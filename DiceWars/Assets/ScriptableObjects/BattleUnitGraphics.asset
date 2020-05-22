@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c640f4596050bc24cb7655feb5c50ed6, type: 3}
+  m_Name: BattleUnitGraphics
+  m_EditorClassIdentifier: 
+  unitSprite_class01: []
+  unitTile_class_01:
+  - {fileID: 11400000, guid: 4ac6d57f29079f84785f8fe7ab3946bd, type: 2}
+  - {fileID: 11400000, guid: 4a8f0b6059978244584b65f9f86107b4, type: 2}
+  - {fileID: 11400000, guid: 16308ea5bf8bcc54a88c0d0a53a97dcf, type: 2}
+  - {fileID: 11400000, guid: 802dae9ac74b0524bbf2855de5b976d7, type: 2}
+  - {fileID: 11400000, guid: 5626e81ac09b95947bede0a23deda5c5, type: 2}
+  - {fileID: 11400000, guid: 43ca123f8170ff549867902b69dedb7e, type: 2}
+  - {fileID: 11400000, guid: c79b18a2668056e42bb126d35e8d27d5, type: 2}
+  - {fileID: 11400000, guid: fcc212ec6ae6d8e498102b3c29161d5d, type: 2}

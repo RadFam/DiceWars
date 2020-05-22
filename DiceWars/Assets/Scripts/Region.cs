@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using BattleUnitStructure;
 
 namespace RegionStructure
 {
@@ -11,10 +13,12 @@ namespace RegionStructure
         private int myNum;
         private List<Vector3Int> tileCoords;
         private List<int> borderRegions;
+        private Vector3Int regionCenter;
 
         public int myPlayer;
         public int myArmy;
         public Color myColor;
+        public List<BattleUnit> myArmyOnRegion;
 
         public int RegNum
         {
@@ -34,6 +38,11 @@ namespace RegionStructure
             set { borderRegions = value; }
         }
 
+        public Vector3Int RegCenter
+        {
+            get { return regionCenter; }
+        }
+
         public Region()
         {
             myNum = 0;
@@ -42,7 +51,9 @@ namespace RegionStructure
 
             myPlayer = -1;
             myArmy = -1;
+
             myColor = new Color(1.0f, 1.0f, 1.0f);
+            myArmyOnRegion = new List<BattleUnit>();
         }
 
         public Region(int nm)
@@ -54,6 +65,7 @@ namespace RegionStructure
             myPlayer = -1;
             myArmy = -1;
             myColor = new Color(1.0f, 1.0f, 1.0f);
+            myArmyOnRegion = new List<BattleUnit>();
         }
 
         public void AddTile(Vector3Int tileCrd)
@@ -67,6 +79,72 @@ namespace RegionStructure
             if (!borderRegions.Contains(reg))
             {
                 borderRegions.Add(reg);
+            }
+        }
+
+        public int AddArmy(int newArmy, ControlScript.ArmyTypes type)
+        {
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1)
+            {
+                return myArmyOnRegion[ind].AddUnits(newArmy);
+            }
+
+            return newArmy;
+        }
+
+        public void EvaluateRegionCenter()
+        {
+            int xCenter = 0;
+            int yCenter = 0;
+
+            foreach (Vector3Int tileCrd in tileCoords)
+            {
+                xCenter += tileCrd.x;
+                yCenter += tileCrd.y;
+            }
+            xCenter /= tileCoords.Count;
+            yCenter /= tileCoords.Count;
+
+            Vector3Int prefCenter = new Vector3Int(xCenter, yCenter, 0);
+
+            var sortedTileCoords = tileCoords.OrderByDescending(x => Vector3Int.Distance(x, prefCenter)).Reverse().ToList();
+
+            bool stopFinding = false;
+            int ind = 0;
+
+            int xNeib, yNeib;
+            Vector3Int tmpCenterNeib;
+            while (!stopFinding)
+            {
+                xCenter = sortedTileCoords[ind].x;
+                yCenter = sortedTileCoords[ind].y;
+
+                yNeib = yCenter - 1;
+                if (Mathf.Abs(yCenter) % 2 == 0)
+                {
+                    xNeib = xCenter - 1;
+                }
+                else
+                {
+                    xNeib = xCenter;
+                }
+
+                tmpCenterNeib = new Vector3Int(xNeib, yNeib, 0);
+
+                if (tileCoords.Contains(tmpCenterNeib))
+                {
+                    regionCenter = sortedTileCoords[ind];
+                    stopFinding = true;
+                }
+
+                ind++;
+                if (ind == tileCoords.Count)
+                {
+                    regionCenter = sortedTileCoords[0];
+                    stopFinding = true;
+                }
+
             }
         }
     }

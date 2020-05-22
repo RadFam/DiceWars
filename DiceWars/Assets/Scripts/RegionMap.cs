@@ -29,21 +29,25 @@ namespace RegionStructure
         public int[,] GetAdjMatrix
         {
             get { return regionAdjacency; }
+            set { regionAdjacency = value; }
         }
 
         public List<Region> GetAccRegions
         {
             get { return accessRegions; }
+            set { accessRegions = value; }
         }
 
         public Vector3Int[] GetCoords
         {
             get { return tileCoords; }
+            set { tileCoords = value; }
         }
 
         public int[] GetRegion
         {
             get { return regionAssign; }
+            set { regionAssign = value; }
         }
 
         public int[] GetRegionDBL
@@ -479,6 +483,11 @@ namespace RegionStructure
                 {
                     accessRegions.Add(allRegions[i]);
                 }
+            }
+
+            foreach (Region rg in accessRegions)
+            {
+                rg.EvaluateRegionCenter();
             }
         }
 

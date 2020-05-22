@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using RegionStructure;
 
 public class ControlScript : MonoBehaviour
 {
+    public enum ArmyTypes {Dice_d6, Dice_d12, Dice_d20};
+
     public Grid tileGrid;
     public List<Tile> allTiles;
     public List<Tile> borderTiles;
     //public Tile redTile;
     public Tilemap gameTilemap;
     public List<Tilemap> borderTilemaps;
+    public Tilemap diceTilemap;
+
+    public BattleUnitGraphics graphData;
 
     public int playersCount;
     public int initArmy;
@@ -36,6 +42,7 @@ public class ControlScript : MonoBehaviour
         RM = gameObject.GetComponent<RegionMap>();
         RM.GenerateRegionsMap();
         InitiatePlayerDistribution();
+        InitiateArmyDistribution();
     }
 
     public void ShowData()
@@ -70,6 +77,7 @@ public class ControlScript : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             DrawTestRegions();
+            DrawBattleUnits();
         }
 
         if (Input.GetMouseButtonDown(2))
@@ -125,7 +133,7 @@ public class ControlScript : MonoBehaviour
                 {
                     if (border[j] == 1)
                     {
-                        tmpVct = new Vector3Int(regCoord[i].x, regCoord[i].y, -1 - j);
+                        tmpVct = new Vector3Int(regCoord[i].x, regCoord[i].y, -1);
                         borderTilemaps[j].SetTile(regCoord[i], borderTiles[j]);
                     }
                 }
@@ -162,7 +170,53 @@ public class ControlScript : MonoBehaviour
                 tmpNmbrs.RemoveAt(tmpInd);
             }
         }
+    }
 
+    public void InitiateArmyDistribution()
+    {
+        for (int i = 0; i < playersCount; ++i)
+        {
+            int armyCount = initArmy;
+
+            var regInd = RM.GetAccRegions.Select((val, ind) => new { val, ind }).Where(x => x.val.myPlayer == i).Select(x => x.ind).ToList();
+
+            foreach (int index in regInd)
+            {
+                Dice dc = new Dice();
+                dc.AddUnits(1);
+                armyCount--;
+                Region reg = RM.GetAccRegions[index];
+                reg.myArmyOnRegion.Add(dc);
+                RM.GetAccRegions[index] = reg;
+            }
+
+            // А теперь, оставшиеся войска рандомно расставляем
+            int cntr = 0;
+            int addArmyNum = 0;
+            int res = 0;
+            while (armyCount > 0)
+            {
+                addArmyNum = Random.Range(1, 4);
+                addArmyNum = Mathf.Min(addArmyNum, armyCount);
+                res = RM.GetAccRegions[regInd[cntr]].AddArmy(addArmyNum, ArmyTypes.Dice_d6);
+                armyCount = armyCount + res - addArmyNum;
+                cntr++;
+                if (cntr == regInd.Count)
+                {
+                    cntr = 0;
+                }
+            }
+        }
+    }
+
+    public void DrawBattleUnits()
+    {
+        foreach (Region reg in RM.GetAccRegions)
+        {
+            Vector3Int placeUnit = new Vector3Int(reg.RegCenter.x, reg.RegCenter.y, -8);
+            int player = reg.myPlayer;
+            gameTilemap.SetTile(placeUnit, graphData.unitTile_class_01[player]);
+        }
     }
 
     public void OnRegionClick()
