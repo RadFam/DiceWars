@@ -64,7 +64,7 @@ namespace RegionStructure
         public void SetNeighbour(int reg)
         {
             int ind = borderRegions.FindIndex(x => x == reg);
-            if (ind == -1)
+            if (!borderRegions.Contains(reg))
             {
                 borderRegions.Add(reg);
             }

@@ -15,13 +15,26 @@ namespace RegionStructure
         public int rarePercent;
 
         private List<Region> allRegions;
+        private List<Region> accessRegions;
         private int[] regionAssign;
+        private int[] regionAssignDBL;
         private List<int> growthFront;
         private Vector3Int[] tileCoords;
         private int[,] regionAdjacency;
+        private int[,] regionAdjacencyDBL;
 
         private bool[] visited;
         private int sparceAttempts = 100;
+
+        public int[,] GetAdjMatrix
+        {
+            get { return regionAdjacency; }
+        }
+
+        public List<Region> GetAccRegions
+        {
+            get { return accessRegions; }
+        }
 
         public Vector3Int[] GetCoords
         {
@@ -33,13 +46,21 @@ namespace RegionStructure
             get { return regionAssign; }
         }
 
+        public int[] GetRegionDBL
+        {
+            get { return regionAssignDBL; }
+        }
+
         // Start is called before the first frame update
         void Awake()
         {
             allRegions = new List<Region>();
+            accessRegions = new List<Region>();
             visited = new bool[regionsNum];
             regionAdjacency = new int[regionsNum, regionsNum];
+            regionAdjacencyDBL = new int[regionsNum, regionsNum];
             regionAssign = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
+            regionAssignDBL = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
             growthFront = new List<int>();
             tileCoords = new Vector3Int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
             for (int i = 0; i < (2 * deltaYTile + 1) * (2 * deltaXTile + 1); ++i)
@@ -55,6 +76,7 @@ namespace RegionStructure
         public void GenerateRegionsMap()
         {
             allRegions.Clear();
+            accessRegions.Clear();
 
             // Create seed points
             List<Vector3Int> seedTiles = new List<Vector3Int>();
@@ -80,6 +102,7 @@ namespace RegionStructure
                 }
                 seedTiles.Add(new Vector3Int(x, y, 0));
                 regionAssign[(x + deltaXTile) + (y + deltaYTile) * (2 * deltaXTile + 1)] = i;
+                regionAssignDBL[(x + deltaXTile) + (y + deltaYTile) * (2 * deltaXTile + 1)] = i;
                 growthFront[(x + deltaXTile) + (y + deltaYTile) * (2 * deltaXTile + 1)] = 1;
             }
 
@@ -106,7 +129,7 @@ namespace RegionStructure
                     // Решаем, разрастись ему, или нет
                     probab = Random.Range(1, 5) % 4;
                     probab = 1;
-                    if (probab != 0)
+                    if (probab != 0) // ПО ХОДУ ТУТ ТОЖЕ НУЖНО УЧИТЫВАТЬ ЧЕТНОСТЬ/НЕЧЕТНОСТЬ СТРОКИ ДЛЯ ОПЕРЕДЕЛЕНИЯ СВОИХ СОСЕДЕЙ!!!!
                     {
                         growthFront[ind] = 2;
 
@@ -114,97 +137,10 @@ namespace RegionStructure
                         myX = tileCoords[ind].x;
                         myY = tileCoords[ind].y;
 
-                        neibX = myX - 1;
-                        neibY = myY - 1;
-                        if (neibX >= -deltaXTile && neibY >= -deltaYTile)
-                        {
-                            neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
-                            if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
-                            {
-                                growthFront[neibInd] = 1;
-                                regionAssign[neibInd] = regionAssign[ind];
-
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                            if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
-                            {
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.SetNeighbour(regionAssign[neibInd]);
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                        }
-
-                        neibX = myX;
-                        neibY = myY - 1;
-                        if (neibY >= -deltaYTile)
-                        {
-                            neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
-                            if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
-                            {
-                                growthFront[neibInd] = 1;
-                                regionAssign[neibInd] = regionAssign[ind];
-
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                            if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
-                            {
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.SetNeighbour(regionAssign[neibInd]);
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                        }
-
+                        // Соседи, координаты которых будут всегда такими, какие они есть
                         neibX = myX + 1;
                         neibY = myY;
                         if (neibX <= deltaXTile)
-                        {
-                            neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
-                            if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
-                            {
-                                growthFront[neibInd] = 1;
-                                regionAssign[neibInd] = regionAssign[ind];
-
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                            if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
-                            {
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.SetNeighbour(regionAssign[neibInd]);
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                        }
-
-                        neibX = myX;
-                        neibY = myY + 1;
-                        if (neibY <= deltaYTile)
-                        {
-                            neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
-                            if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
-                            {
-                                growthFront[neibInd] = 1;
-                                regionAssign[neibInd] = regionAssign[ind];
-
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                            if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
-                            {
-                                tmpReg = allRegions[regionAssign[ind]];
-                                tmpReg.SetNeighbour(regionAssign[neibInd]);
-                                allRegions[regionAssign[ind]] = tmpReg;
-                            }
-                        }
-
-                        neibX = myX - 1;
-                        neibY = myY + 1;
-                        if (neibX >= -deltaXTile && neibY <= deltaYTile)
                         {
                             neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
                             if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
@@ -245,6 +181,183 @@ namespace RegionStructure
                                 allRegions[regionAssign[ind]] = tmpReg;
                             }
                         }
+
+                        // Соседи, положения которых зависят от четности/нечетности номера строки
+                        if (Mathf.Abs(myY) % 2 == 0) // четный номер строки
+                        {
+                            neibX = myX - 1;
+                            neibY = myY - 1;
+                            if (neibX >= -deltaXTile && neibY >= -deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX;
+                            neibY = myY - 1;
+                            if (neibY >= -deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX;
+                            neibY = myY + 1;
+                            if (neibY <= deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX - 1;
+                            neibY = myY + 1;
+                            if (neibX >= -deltaXTile && neibY <= deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                        }
+                        if (Mathf.Abs(myY) % 2 == 1) // Нечетная строка
+                        {
+                            neibX = myX;
+                            neibY = myY - 1;
+                            if (neibY >= -deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX + 1;
+                            neibY = myY - 1;
+                            if (neibX <= deltaXTile && neibY >= -deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX + 1;
+                            neibY = myY + 1;
+                            if (neibX <= deltaXTile && neibY <= deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                            neibX = myX;
+                            neibY = myY + 1;
+                            if (neibY <= deltaYTile)
+                            {
+                                neibInd = (neibX + deltaXTile) + (neibY + deltaYTile) * (2 * deltaXTile + 1);
+                                if (growthFront[neibInd] == 0 && regionAssign[neibInd] == -1)
+                                {
+                                    growthFront[neibInd] = 1;
+                                    regionAssign[neibInd] = regionAssign[ind];
+
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.AddTile(new Vector3Int(neibX, neibY, 0));
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                                if (regionAssign[neibInd] != 1 && regionAssign[neibInd] != regionAssign[ind])
+                                {
+                                    tmpReg = allRegions[regionAssign[ind]];
+                                    tmpReg.SetNeighbour(regionAssign[neibInd]);
+                                    allRegions[regionAssign[ind]] = tmpReg;
+                                }
+                            }
+                        }
+
                     }
                 }
 
@@ -255,6 +368,11 @@ namespace RegionStructure
                 }
             }
 
+            for (int lng = 0; lng < regionAssign.Length; ++lng)
+            {
+                regionAssignDBL[lng] = regionAssign[lng];
+            }
+
             // Make RegionAdjacency matrix
             for (int i = 0; i < regionsNum; ++i)
             {
@@ -263,6 +381,8 @@ namespace RegionStructure
                 {
                     regionAdjacency[i, j] = 1;
                     regionAdjacency[j, i] = 1;
+                    regionAdjacencyDBL[i, j] = 1;
+                    regionAdjacencyDBL[j, i] = 1;
                 }
             }
 
@@ -282,7 +402,7 @@ namespace RegionStructure
                 int regToDel = Random.Range(0, regionsNum);
                 bool itWas = rared.Any(item => item == regToDel);
 
-                if (!itWas)
+                if (!rared.Contains(regToDel))
                 {
                     // Try to zeroficate all edges
                     for (int k = 0; k < regionsNum; ++k)
@@ -296,7 +416,7 @@ namespace RegionStructure
                     int start = 0;
                     for (int k = 0; k < regionsNum; ++k)
                     {
-                        if (!rared.Contains(k))
+                        if (!rared.Contains(k) && k != regToDel)
                         {
                             start = k;
                             break;
@@ -353,15 +473,13 @@ namespace RegionStructure
 
             }
 
-            /*
-            Debug.Log("Rared regions: " + rared.Count.ToString());
-            foreach (int num in rared)
+            for (int i = 0; i < regionsNum; ++i)
             {
-                Debug.Log("Region #: " + num.ToString());
+                if (!rared.Contains(i))
+                {
+                    accessRegions.Add(allRegions[i]);
+                }
             }
-            */
-            
-            //Debug.Log("End of region growth");
         }
 
         private void DFS(int num)
@@ -571,6 +689,57 @@ namespace RegionStructure
             }
 
             return ans;
+        }
+
+        public int GetPlayerByCoord(int tileNum)
+        {
+            int regNum = regionAssign[tileNum];
+            if (regNum == -1)
+            {
+                return -1;
+            }
+
+            return allRegions[regNum].myPlayer;
+        }
+
+        public int GetPlayerByCoord(Vector3Int crd)
+        {
+            int ind = (crd.x + deltaXTile) + (crd.y + deltaYTile) * (2 * deltaXTile + 1);
+            int regNum = regionAssign[ind];
+            if (regNum == -1)
+            {
+                return -1;
+            }
+
+            return allRegions[regNum].myPlayer;
+        }
+
+        public List<Vector3Int> GetFullregionByCoord(Vector3Int crd)
+        {
+            int ind = (crd.x + deltaXTile) + (crd.y + deltaYTile) * (2 * deltaXTile + 1);
+            int regNum = regionAssign[ind];
+            if (regNum == -1)
+            {
+                return null;
+            }
+
+            return allRegions[regNum].RegTiles;
+        }
+
+        public void GetAdjacency(Vector3Int crd)
+        {
+            int tileInd = GetIndexByCoord(crd);
+            int regNum = regionAssign[tileInd];
+            Debug.Log("Init Adj");
+            for (int i = 0; i < regionsNum; ++i)
+            {
+                Debug.Log(i.ToString() + " " + regionAdjacencyDBL[regNum, i]);
+            }
+            Debug.Log("Have Adj");
+            for (int i = 0; i < regionsNum; ++i)
+            {
+                Debug.Log(i.ToString() + " " + regionAdjacency[regNum, i]);
+            }
         }
     }
 }

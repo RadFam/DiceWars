@@ -12,15 +12,22 @@ public class ControlScript : MonoBehaviour
     //public Tile redTile;
     public Tilemap gameTilemap;
     public List<Tilemap> borderTilemaps;
+
+    public int playersCount;
+    public int initArmy;
+
     private Vector3Int position;
     private Camera cam;
 
     private float timer;
     private RegionMap RM;
+    private List<int> darkenedRegions;
 
     // Start is called before the first frame update
     void Start()
     {
+        darkenedRegions = new List<int>();
+
         cam = Camera.main;
         position = new Vector3Int(-1, 1, 0);
         //ShowData();
@@ -28,6 +35,7 @@ public class ControlScript : MonoBehaviour
         timer = 0.0f;
         RM = gameObject.GetComponent<RegionMap>();
         RM.GenerateRegionsMap();
+        InitiatePlayerDistribution();
     }
 
     public void ShowData()
@@ -43,6 +51,7 @@ public class ControlScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            
             Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tV = tileGrid.WorldToCell(mV);
 
@@ -50,40 +59,56 @@ public class ControlScript : MonoBehaviour
 
             int ind = RM.GetIndexByCoord(tV);
             int reg = RM.GetRegion[ind];
+            int regDBL = RM.GetRegionDBL[ind];
+            int pl = RM.GetPlayerByCoord(tV);
 
-            Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString());
+            Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
+
+            OnRegionClick();
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             DrawTestRegions();
         }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int tV = tileGrid.WorldToCell(mV);
+            RM.GetAdjacency(tV);
+        }
     }
 
+    // Отрисовка всего игрового поля 
     public void DrawTestRegions()
     {
         int[] regType = RM.GetRegion;
         Vector3Int[] regCoord = RM.GetCoords;
 
         int type;
+        int player;
         float type2;
         Color hexColor;
         for (int i = 0; i < regType.Length; ++i)
         {
             type = regType[i];
+            player = RM.GetPlayerByCoord(i);
             type2 = (float)type;
             if (type != -1)
             {
                 hexColor = new Color(type2 / RM.regionsNum, 1.0f, 1.0f);
+                //Debug.Log("My current player is: " + player.ToString());
+                gameTilemap.SetTile(regCoord[i], allTiles[player]);
             }
             else
             {
                 hexColor = new Color(0.0f, 0.0f, 1.0f);
             }
                         
-            gameTilemap.SetTile(regCoord[i], allTiles[6]);
-            gameTilemap.SetTileFlags(regCoord[i], TileFlags.None);
-            gameTilemap.SetColor(regCoord[i], hexColor);
+            //gameTilemap.SetTile(regCoord[i], allTiles[6]);
+            //gameTilemap.SetTileFlags(regCoord[i], TileFlags.None);
+            //gameTilemap.SetColor(regCoord[i], hexColor);
             //gameTilemap.RefreshTile(regCoord[i]);
         }
 
@@ -101,7 +126,6 @@ public class ControlScript : MonoBehaviour
                     if (border[j] == 1)
                     {
                         tmpVct = new Vector3Int(regCoord[i].x, regCoord[i].y, -1 - j);
-                        //gameTilemap.SetTile(tmpVct, borderTiles[j]);
                         borderTilemaps[j].SetTile(regCoord[i], borderTiles[j]);
                     }
                 }
@@ -111,6 +135,108 @@ public class ControlScript : MonoBehaviour
 
     public void InitiatePlayerDistribution()
     {
+        int accReg = RM.GetAccRegions.Count;
+        int fullReg = accReg / playersCount;
+        int resReg = accReg % playersCount;
 
+        List<int> tmpNmbrs = new List<int>();
+        for (int i = 0; i < accReg; ++i)
+        {
+            tmpNmbrs.Add(i);
+        }
+
+        for (int pl = 0; pl < playersCount; ++pl)
+        {
+            int smplCounter = 0;
+            int regCounter = fullReg;
+            if (pl < resReg)
+            {
+                regCounter = fullReg + 1;
+            }
+                
+            while(smplCounter < regCounter)
+            {
+                int tmpInd = Random.Range(0, tmpNmbrs.Count);
+                RM.GetAccRegions[tmpNmbrs[tmpInd]].myPlayer = pl;
+                smplCounter++;
+                tmpNmbrs.RemoveAt(tmpInd);
+            }
+        }
+
+    }
+
+    public void OnRegionClick()
+    {
+        // Определяем на какой тайл нажали - какому региону принадлежит
+        Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int tV = tileGrid.WorldToCell(mV);
+
+        // Get Number of region
+        int ind = RM.GetIndexByCoord(tV);
+        int reg = RM.GetRegion[ind];
+
+        // Проверяем, единственный ли этот регион в списке
+        if (darkenedRegions.Count == 0)
+        {
+            darkenedRegions.Add(reg);
+            SubdrawRegion(reg, true);
+        }
+        if (darkenedRegions.Count == 1)
+        {
+            int firstReg = darkenedRegions[0];
+            
+            // Проверяем, соседние ли это враждебные территории
+            
+            // Не соседние
+            if (RM.GetAdjMatrix[firstReg, reg] == 0)
+            {
+                SubdrawRegion(firstReg, false);
+                darkenedRegions.Clear();
+                darkenedRegions.Add(reg);
+                SubdrawRegion(reg, true);
+            }
+
+            if (RM.GetAdjMatrix[firstReg, reg] == 1)
+            {
+                int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == firstReg);
+                int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg);
+                
+                // Один и тот же игрок
+                if (RM.GetAccRegions[ind_1].myPlayer == RM.GetAccRegions[ind_2].myPlayer)
+                {
+                    SubdrawRegion(firstReg, false);
+                    darkenedRegions.Clear();
+                    darkenedRegions.Add(reg);
+                    SubdrawRegion(reg, true);
+                }
+                else
+                {
+                    darkenedRegions.Add(reg);
+                    SubdrawRegion(reg, true);
+                    // Start Attack procedure
+                }
+            }
+        }
+    }
+
+    private void SubdrawRegion(int regNum, bool darken)
+    {
+        int ind = RM.GetAccRegions.FindIndex(x => x.RegNum == regNum);
+
+        Color hexColor;
+        if (darken)
+        {
+            hexColor = new Color(0.2f, 0.2f, 0.2f);
+        }
+        else
+        {
+            hexColor = new Color(1.0f, 1.0f, 1.0f);
+        }
+
+        for (int i = 0; i < RM.GetAccRegions[ind].RegTiles.Count; ++i)
+        {
+            gameTilemap.SetTileFlags(RM.GetAccRegions[ind].RegTiles[i], TileFlags.None);
+            gameTilemap.SetColor(RM.GetAccRegions[ind].RegTiles[i], hexColor);
+        }
     }
 }

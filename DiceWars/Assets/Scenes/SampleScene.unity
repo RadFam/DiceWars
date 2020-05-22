@@ -566,7 +566,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 99198d668f5249a4cb096a77f778c5dc, type: 2}
   - {fileID: 11400000, guid: d2ddfeb5ec939074984fef99cc6b8a38, type: 2}
   - {fileID: 11400000, guid: 7b0030e8717b3cb4c934f271af7d9e33, type: 2}
-  redTile: {fileID: 11400000, guid: fe3c6bf82cf445a4a8a6bd29ef9ef157, type: 2}
   gameTilemap: {fileID: 1709078098}
   borderTilemaps:
   - {fileID: 967179633}
@@ -575,6 +574,8 @@ MonoBehaviour:
   - {fileID: 540301673}
   - {fileID: 497532375}
   - {fileID: 1742911618}
+  playersCount: 8
+  initArmy: 0
 --- !u!114 &617542464
 MonoBehaviour:
   m_ObjectHideFlags: 0
