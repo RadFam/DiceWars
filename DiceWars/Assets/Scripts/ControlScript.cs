@@ -215,7 +215,7 @@ public class ControlScript : MonoBehaviour
         {
             Vector3Int placeUnit = new Vector3Int(reg.RegCenter.x, reg.RegCenter.y, -8);
             int player = reg.myPlayer;
-            gameTilemap.SetTile(placeUnit, graphData.unitTile_class_01[player]);
+            diceTilemap.SetTile(placeUnit, graphData.unitTile_class_01[player]);
         }
     }
 
