@@ -22,3 +22,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 43ca123f8170ff549867902b69dedb7e, type: 2}
   - {fileID: 11400000, guid: c79b18a2668056e42bb126d35e8d27d5, type: 2}
   - {fileID: 11400000, guid: fcc212ec6ae6d8e498102b3c29161d5d, type: 2}
+  diceSprite_class_d6:
+  - {fileID: 21300000, guid: 6b24554ca89ebb449b4a37b35ac1ba9c, type: 3}
+  - {fileID: 21300000, guid: c96eaf10a12dd2a49b63c99ce058ba70, type: 3}
+  - {fileID: 21300000, guid: 0ddfd0aa811df2b4ea2de97cc76787fb, type: 3}
+  - {fileID: 21300000, guid: fe908cf27cc365e4f827715b680fff32, type: 3}
+  - {fileID: 21300000, guid: 87dbad3a7234231479de3f6acf834f04, type: 3}
+  - {fileID: 21300000, guid: 650e0e37efd460c4c9f8c37279636f3f, type: 3}
+  - {fileID: 21300000, guid: ef229da1c58c1b64f88e024ebe58466a, type: 3}
+  - {fileID: 21300000, guid: ab21ee4993de0e94e98ae716fa470ae3, type: 3}
+  valueSprite_class_d6_white:
+  - {fileID: 21300000, guid: f33f2f3228f80a94395fe6709973b710, type: 3}
+  - {fileID: 21300000, guid: 924c76d25016207438d101a8ec27fcb0, type: 3}
+  - {fileID: 21300000, guid: 4b40a0e0b0061c5479320612fd45f545, type: 3}
+  - {fileID: 21300000, guid: 01b0f8a6441966745af8c4abea2247d6, type: 3}
+  - {fileID: 21300000, guid: 632904a6739143548a6ea5a7d3d9ac4d, type: 3}
+  - {fileID: 21300000, guid: 23f7838d8d0d4744f8c1073c4992b8c7, type: 3}
+  valueSprite_class_d6_black:
+  - {fileID: 21300000, guid: 72bc5866b2c72ec41b34481975fa4c0b, type: 3}
+  - {fileID: 21300000, guid: 54c3ee707a7ca6b46b51b9d9e4314821, type: 3}
+  - {fileID: 21300000, guid: 815129aa1c0ad714aa8cbd5720427f49, type: 3}
+  - {fileID: 21300000, guid: cd2b1dc857a7a9e41abdecf161cfca1c, type: 3}
+  - {fileID: 21300000, guid: 931105aaa1d6ec246919d14af3b4d735, type: 3}
+  - {fileID: 21300000, guid: af19e9921199ffe45a8b96a7ae3bc929, type: 3}
+  battleSwords:
+  - {fileID: 21300000, guid: c8360d1682366f3449159fe68becbcd8, type: 3}
+  - {fileID: 21300000, guid: bfd81d786565310458158f8b53ff20fa, type: 3}
+  - {fileID: 21300000, guid: 9c9b9575b0d9a4941834455281d19e9d, type: 3}

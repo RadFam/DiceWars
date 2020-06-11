@@ -685,6 +685,19 @@ namespace RegionStructure
             return;
         }
 
+        public Region GetRegionByCoords(Vector3Int crd)
+        {
+            foreach (Region rg in accessRegions)
+            {
+                if (rg.RegTiles.Contains(crd))
+                {
+                    return rg;
+                }
+            }
+
+            return null;
+        }
+
         public int GetIndexByCoord(Vector3Int crd)
         {
             int ans = 0;

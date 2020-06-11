@@ -1,6 +1,7 @@
 ﻿using BattleUnitStructure;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using GameControls;
 
 public class Dice : BattleUnit
 {

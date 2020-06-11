@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using GameControls;
 
 namespace BattleUnitStructure
 {
@@ -12,7 +13,7 @@ namespace BattleUnitStructure
         public int lowerDamage;
         public int upperDamage;
 
-        public int myCount;
+        public int myCount; // Текущее количество войск
         public int maxUnitOnTerritory;
         //public BattleUnitGraphics graphData;
 

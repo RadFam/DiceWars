@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using BattleUnitStructure;
+using GameControls;
 
 namespace RegionStructure
 {
@@ -91,6 +92,29 @@ namespace RegionStructure
             }
 
             return newArmy;
+        }
+
+        public int GetArmy(ControlScript.ArmyTypes type)
+        {
+            int army = 0;
+
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1)
+            {
+                return myArmyOnRegion[ind].myCount;
+            }
+
+            return army;
+        }
+
+        public BattleUnit GetArmyUnit(ControlScript.ArmyTypes type)
+        {
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1)
+            {
+                return myArmyOnRegion[ind];
+            } 
+            return null;
         }
 
         public void EvaluateRegionCenter()
