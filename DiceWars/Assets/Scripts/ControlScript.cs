@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using RegionStructure;
+using UIControls;
 
 namespace GameControls
 {
@@ -30,6 +31,9 @@ namespace GameControls
         private float timer;
         private RegionMap RM;
         private List<int> darkenedRegions;
+
+        [SerializeField]
+        private int initPlayerNum;
 
         public RegionMap GetRM
         {
@@ -278,10 +282,41 @@ namespace GameControls
 
                         // Start Attack procedure
                         ClashScript CS = gameObject.GetComponent<ClashScript>();
-                        CS.OnClash(firstReg.RegC);
+                        CS.OnClash(RM.GetCoordByRegion(firstReg), RM.GetCoordByRegion(reg));
+
+                        // If player was an attacker - show it
+                        if (RM.GetAccRegions[ind_1].myPlayer == initPlayerNum)
+                        {
+                            GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+                            gameUIVC.ShowClashAttack();
+                            UndarkRegions();
+
+
+                        }
                     }
                 }
             }
+        }
+
+        public void ChangeArmyDistribution(int reg_1, int reg_2, bool successAttack)
+        {
+            if (successAttack)
+            {
+
+            }
+            else
+            {
+                RM.GetAllRegions[reg_1].DefeatArmy(ArmyTypes.Dice_d6);
+            }
+        }
+
+        public void UndarkRegions()
+        {
+            foreach (int nm in darkenedRegions)
+            {
+                SubdrawRegion(nm, false);
+            }
+            darkenedRegions.Clear();
         }
 
         private void SubdrawRegion(int regNum, bool darken)

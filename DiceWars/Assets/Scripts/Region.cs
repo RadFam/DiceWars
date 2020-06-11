@@ -94,6 +94,15 @@ namespace RegionStructure
             return newArmy;
         }
 
+        public void DefeatArmy(ControlScript.ArmyTypes type)
+        {
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1)
+            {
+                myArmyOnRegion[ind].DefeatUnit();
+            }
+        }
+
         public int GetArmy(ControlScript.ArmyTypes type)
         {
             int army = 0;

@@ -4,39 +4,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameControls;
 
-public class UIDiceScript : MonoBehaviour
+namespace UIControls
 {
-
-    public Image bkgrIm;
-    public Image valvIm;
-
-    public void SetData(ControlScript.ArmyTypes aType, int playerNum, int value)
+    public class UIDiceScript : MonoBehaviour
     {
-        if (aType == ControlScript.ArmyTypes.Dice_d6)
+
+        public Image bkgrIm;
+        public Image valvIm;
+
+        public void SetData(ControlScript.ArmyTypes aType, int playerNum, int value)
         {
-            bkgrIm.sprite = CommonControl.instance.allGraphics.diceSprite_class_d6[playerNum];
-            if (playerNum >= 1 && playerNum <= 5)
+            if (aType == ControlScript.ArmyTypes.Dice_d6)
             {
-                valvIm.sprite = CommonControl.instance.allGraphics.valueSprite_class_d6_white[value - 1];
+                bkgrIm.sprite = CommonControl.instance.allGraphics.diceSprite_class_d6[playerNum];
+                if (playerNum >= 1 && playerNum <= 5)
+                {
+                    valvIm.sprite = CommonControl.instance.allGraphics.valueSprite_class_d6_white[value - 1];
+                }
+                else
+                {
+                    valvIm.sprite = CommonControl.instance.allGraphics.valueSprite_class_d6_black[value - 1];
+                }
             }
-            else
+            if (aType == ControlScript.ArmyTypes.Dice_d12)
             {
-                valvIm.sprite = CommonControl.instance.allGraphics.valueSprite_class_d6_black[value - 1];
+
+            }
+            if (aType == ControlScript.ArmyTypes.Dice_d20)
+            {
+
             }
         }
-        if (aType == ControlScript.ArmyTypes.Dice_d12)
+
+        public void ClearData()
         {
-
+            bkgrIm.sprite = null;
+            valvIm.sprite = null;
         }
-        if (aType == ControlScript.ArmyTypes.Dice_d20)
-        {
-
-        }
-    }
-
-    public void ClearData()
-    {
-        bkgrIm.sprite = null;
-        valvIm.sprite = null;
     }
 }

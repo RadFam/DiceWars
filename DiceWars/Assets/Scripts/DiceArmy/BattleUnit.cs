@@ -50,5 +50,10 @@ namespace BattleUnitStructure
             myCount += add;
             return Mathf.Max(0, value - add);
         }
+
+        public void DefeatUnit()
+        {
+            myCount = 1;
+        }
     }
 }

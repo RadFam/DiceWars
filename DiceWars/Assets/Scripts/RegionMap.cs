@@ -32,6 +32,12 @@ namespace RegionStructure
             set { regionAdjacency = value; }
         }
 
+        public List<Region> GetAllRegions
+        {
+            get { return allRegions; }
+            set { allRegions = value; }
+        }
+
         public List<Region> GetAccRegions
         {
             get { return accessRegions; }
@@ -746,6 +752,16 @@ namespace RegionStructure
             }
 
             return allRegions[regNum].RegTiles;
+        }
+
+        public Vector3Int GetCoordByRegion(int regionNum)
+        {
+            if (regionNum < allRegions.Count)
+            {
+                return allRegions[regionNum].RegCenter;
+            }
+
+            return new Vector3Int(0, 0, 0);
         }
 
         public void GetAdjacency(Vector3Int crd)
