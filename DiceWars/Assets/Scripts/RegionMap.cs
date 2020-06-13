@@ -779,6 +779,23 @@ namespace RegionStructure
                 Debug.Log(i.ToString() + " " + regionAdjacency[regNum, i]);
             }
         }
+
+        public List<Region> GetRegionsOfPlayer(int playerNum)
+        {
+            List<Region> ansReg = new List<Region>();
+
+            foreach (Region rg in accessRegions)
+            {
+
+            }
+
+            if (ansReg.Count == 0)
+            {
+                return null;
+            }
+
+            return ansReg;
+        }
     }
 }
 
