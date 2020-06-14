@@ -51,6 +51,12 @@ namespace BattleUnitStructure
             return Mathf.Max(0, value - add);
         }
 
+        public void SetUnits(int value)
+        {
+            int add = Mathf.Min(value, maxUnitOnTerritory);
+            myCount = add;
+        }
+
         public void DefeatUnit()
         {
             myCount = 1;

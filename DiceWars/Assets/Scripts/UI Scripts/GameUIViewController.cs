@@ -7,10 +7,14 @@ namespace UIControls
 {
     public class GameUIViewController : MonoBehaviour
     {
+        [SerializeField]
+        UIBattleFieldScript uiBfs;
+
         public void ShowClashAttack()
         {
-            UIBattleFieldScript uiBfs = gameObject.GetComponentInChildren<UIBattleFieldScript>();
+            //UIBattleFieldScript uiBfs = gameObject.GetComponentInChildren<UIBattleFieldScript>();
             uiBfs.gameObject.SetActive(true);
+            //uiBfs.OnEnable();
         }
     }
 }

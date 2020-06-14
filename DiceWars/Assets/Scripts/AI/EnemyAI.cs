@@ -85,7 +85,19 @@ namespace GameAI
 
         public void AttackRegion(int regionNum)
         {
+            // Darken attack territory
 
+            StartCoroutine(PauseCoroutine());
+            // Darken defend territory
+            StartCoroutine(PauseCoroutine());
+
+            // Undark both territories
+            myCS.UndarkRegions();
+        }
+
+        IEnumerator PauseCoroutine()
+        {
+            yield return new WaitForSeconds(.4f);
         }
     }
 }

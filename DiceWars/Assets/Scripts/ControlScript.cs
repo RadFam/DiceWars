@@ -237,8 +237,64 @@ namespace GameControls
             Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tV = tileGrid.WorldToCell(mV);
 
+            // Первым надо выделить регион, принадлежащий игроку
+            if (darkenedRegions.Count == 1)
+            {
+                DarkRegion(tV);
+            }
+            else if (darkenedRegions.Count == 0)
+            {
+                int indd = RM.GetIndexByCoord(tV);
+                int regg = RM.GetRegion[indd];
+                int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == regg);
+
+                if (RM.GetAccRegions[ind_1].myPlayer == initPlayerNum)
+                {
+                    DarkRegion(tV);
+                }
+            }
+            
+            if (darkenedRegions.Count == 2)
+            {
+                // Теперь, clash regions и смотрим, что из этого получится
+
+                // Start Attack procedure
+                ClashScript CS = gameObject.GetComponent<ClashScript>();
+                bool res = CS.OnClash(RM.GetCoordByRegion(darkenedRegions[0]), RM.GetCoordByRegion(darkenedRegions[1]));
+
+                GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+                gameUIVC.ShowClashAttack();
+
+                ChangeArmyDistribution(darkenedRegions[0], darkenedRegions[1], res);
+                UndarkRegions();
+            }
+        }
+
+        public void ChangeArmyDistribution(int reg_1, int reg_2, bool successAttack)
+        {
+            // reg_1 and reg_2 - numbers of regions!!!
+
+            if (successAttack)
+            {
+                int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
+                int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_2);
+
+                int army = RM.GetAccRegions[ind_1].GetArmy(ArmyTypes.Dice_d6);
+                RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
+                RM.GetAccRegions[ind_2].SetArmy(army - 1, ArmyTypes.Dice_d6);
+
+            }
+            else
+            {
+                int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
+                RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
+            }
+        }
+
+        public void DarkRegion(Vector3Int crd)
+        { 
             // Get Number of region
-            int ind = RM.GetIndexByCoord(tV);
+            int ind = RM.GetIndexByCoord(crd);
             int reg = RM.GetRegion[ind];
 
             // Проверяем, единственный ли этот регион в списке
@@ -247,6 +303,7 @@ namespace GameControls
                 darkenedRegions.Add(reg);
                 SubdrawRegion(reg, true);
             }
+
             if (darkenedRegions.Count == 1)
             {
                 int firstReg = darkenedRegions[0];
@@ -279,34 +336,8 @@ namespace GameControls
                     {
                         darkenedRegions.Add(reg);
                         SubdrawRegion(reg, true);
-
-                        // Start Attack procedure
-                        ClashScript CS = gameObject.GetComponent<ClashScript>();
-                        CS.OnClash(RM.GetCoordByRegion(firstReg), RM.GetCoordByRegion(reg));
-
-                        // If player was an attacker - show it
-                        if (RM.GetAccRegions[ind_1].myPlayer == initPlayerNum)
-                        {
-                            GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
-                            gameUIVC.ShowClashAttack();
-                            UndarkRegions();
-
-
-                        }
                     }
                 }
-            }
-        }
-
-        public void ChangeArmyDistribution(int reg_1, int reg_2, bool successAttack)
-        {
-            if (successAttack)
-            {
-
-            }
-            else
-            {
-                RM.GetAllRegions[reg_1].DefeatArmy(ArmyTypes.Dice_d6);
             }
         }
 

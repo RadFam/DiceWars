@@ -103,6 +103,15 @@ namespace RegionStructure
             }
         }
 
+        public void SetArmy(int val, ControlScript.ArmyTypes type)
+        {
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1 && val > 0)
+            {
+                myArmyOnRegion[ind].SetUnits(val);
+            }
+        }
+
         public int GetArmy(ControlScript.ArmyTypes type)
         {
             int army = 0;

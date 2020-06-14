@@ -35,6 +35,8 @@ namespace GameControls
             int attackVal = attackerResult.Sum();
             int defendVal = defenderResult.Sum();
 
+            Debug.Log("Attack val: " + attackVal.ToString() + "  defend val: " + defendVal.ToString());
+
             victory = attackVal > defendVal;
 
             // Переносми данные в стек атаки в CommonControl
