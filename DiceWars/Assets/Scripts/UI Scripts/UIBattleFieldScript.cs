@@ -29,7 +29,6 @@ namespace UIControls
 
         public void OnEnable()
         {
-            Debug.Log("I`m alive!");
             sum_A = 0;
             sum_B = 0;
             AnimationStage();
@@ -39,7 +38,7 @@ namespace UIControls
         {
             StartCoroutine(Dices_AB_Player());
             // После того, как вывелись кубики, решаем, кто победил
-            ChangeWinner();
+            //ChangeWinner();
             //StartCoroutine(WinnerAnimate());
             //OnDisable();
         }
@@ -149,28 +148,27 @@ namespace UIControls
         }
 
         IEnumerator Dices_AB_Player()
-        {
-            Debug.Log("StartCorountine Dices_AB_Player()");
+        {             
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_1.Count; ++i)
             {
                 sum_A += CommonControl.instance.battleStack.playerA_res_1[i];
                 score_A.text = sum_A.ToString();
                 DrawDice(i, 0, 0);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_2.Count; ++i)
             {
                 sum_A += CommonControl.instance.battleStack.playerA_res_2[i];
                 score_A.text = sum_A.ToString();
                 DrawDice(i, 0, 1);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_3.Count; ++i)
             {
                 sum_A += CommonControl.instance.battleStack.playerA_res_3[i];
                 score_A.text = sum_A.ToString();
                 DrawDice(i, 0, 2);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
 
             for (int i = 0; i < CommonControl.instance.battleStack.playerB_res_1.Count; ++i)
@@ -178,21 +176,21 @@ namespace UIControls
                 sum_B += CommonControl.instance.battleStack.playerB_res_1[i];
                 score_B.text = sum_B.ToString();
                 DrawDice(i, 1, 0);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
             for (int i = 0; i < CommonControl.instance.battleStack.playerB_res_2.Count; ++i)
             {
                 sum_B += CommonControl.instance.battleStack.playerB_res_2[i];
                 score_B.text = sum_B.ToString();
                 DrawDice(i, 1, 1);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
             for (int i = 0; i < CommonControl.instance.battleStack.playerB_res_3.Count; ++i)
             {
                 sum_B += CommonControl.instance.battleStack.playerB_res_3[i];
                 score_B.text = sum_B.ToString();
                 DrawDice(i, 1, 2);
-                yield return new WaitForSeconds(.15f);
+                yield return new WaitForSeconds(.1f);
             }
 
             StartCoroutine(WinnerAnimate());
@@ -203,18 +201,24 @@ namespace UIControls
             for (int i = 0; i < 10; ++i)
             {
                 Vector3 scale = battleImage.transform.localScale;
-                battleImage.transform.localScale = new Vector3(scale.x + i/10.0f, scale.y + i/10.0f, scale.z);
-                yield return new WaitForSeconds(.05f);
+                battleImage.transform.localScale = new Vector3(scale.x + 0.1f, scale.y + 0.1f, scale.z);              
+                yield return new WaitForSeconds(.01f);
             }
+
+            ChangeWinner();
+            yield return new WaitForSeconds(0.1f);
 
             for (int i = 0; i < 20; ++i)
             {
                 Vector3 scale = battleImage.transform.localScale;
-                battleImage.transform.localScale = new Vector3(scale.x - i / 5.0f, scale.y - i / 5.0f, scale.z);
-                yield return new WaitForSeconds(.05f);
+                battleImage.transform.localScale = new Vector3(scale.x - 0.05f, scale.y - 0.05f, scale.z);
+                yield return new WaitForSeconds(.01f);
             }
+            
 
             yield return new WaitForSeconds(1.0f);
+
+            OnDisable();
         }
     }
 

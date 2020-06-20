@@ -32,12 +32,25 @@ namespace GameControls
         private RegionMap RM;
         private List<int> darkenedRegions;
 
+        private bool canPickOnTiles;
+
         [SerializeField]
         private int initPlayerNum;
+        public int CurrPlayerNum
+        {
+            get { return initPlayerNum; }
+            set { initPlayerNum = value; }
+        }
 
         public RegionMap GetRM
         {
             get { return RM; }
+        }
+
+        public bool CanTilePicking
+        {
+            get { return canPickOnTiles; }
+            set { canPickOnTiles = value; }
         }
 
         // Start is called before the first frame update
@@ -70,20 +83,22 @@ namespace GameControls
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if (canPickOnTiles)
+                {
+                    Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
+                    Vector3Int tV = tileGrid.WorldToCell(mV);
 
-                Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
-                Vector3Int tV = tileGrid.WorldToCell(mV);
+                    //gameTilemap.SetTile(tV, redTile);
 
-                //gameTilemap.SetTile(tV, redTile);
+                    int ind = RM.GetIndexByCoord(tV);
+                    int reg = RM.GetRegion[ind];
+                    int regDBL = RM.GetRegionDBL[ind];
+                    int pl = RM.GetPlayerByCoord(tV);
 
-                int ind = RM.GetIndexByCoord(tV);
-                int reg = RM.GetRegion[ind];
-                int regDBL = RM.GetRegionDBL[ind];
-                int pl = RM.GetPlayerByCoord(tV);
+                    Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
 
-                Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
-
-                OnRegionClick();
+                    OnRegionClick();
+                }
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -259,6 +274,8 @@ namespace GameControls
                 // Теперь, clash regions и смотрим, что из этого получится
 
                 // Start Attack procedure
+                canPickOnTiles = false;
+
                 ClashScript CS = gameObject.GetComponent<ClashScript>();
                 bool res = CS.OnClash(RM.GetCoordByRegion(darkenedRegions[0]), RM.GetCoordByRegion(darkenedRegions[1]));
 
@@ -267,6 +284,8 @@ namespace GameControls
 
                 ChangeArmyDistribution(darkenedRegions[0], darkenedRegions[1], res);
                 UndarkRegions();
+
+                canPickOnTiles = true;
             }
         }
 
@@ -276,16 +295,19 @@ namespace GameControls
 
             if (successAttack)
             {
+                Debug.Log("Success change distribution");
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
                 int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_2);
 
                 int army = RM.GetAccRegions[ind_1].GetArmy(ArmyTypes.Dice_d6);
                 RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
                 RM.GetAccRegions[ind_2].SetArmy(army - 1, ArmyTypes.Dice_d6);
+                RM.GetAccRegions[ind_2].myPlayer = RM.GetAccRegions[ind_1].myPlayer;
 
             }
             else
             {
+                Debug.Log("Unsuccess change distribution");
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
                 RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
             }
@@ -352,6 +374,7 @@ namespace GameControls
 
         private void SubdrawRegion(int regNum, bool darken)
         {
+            Debug.Log("Subdraw region: " + regNum.ToString());
             int ind = RM.GetAccRegions.FindIndex(x => x.RegNum == regNum);
 
             Color hexColor;
@@ -368,7 +391,14 @@ namespace GameControls
             {
                 gameTilemap.SetTileFlags(RM.GetAccRegions[ind].RegTiles[i], TileFlags.None);
                 gameTilemap.SetColor(RM.GetAccRegions[ind].RegTiles[i], hexColor);
+
+                // Redraw tiles in the case? when owner of the region is changed
+                gameTilemap.SetTile(RM.GetAccRegions[ind].RegTiles[i], allTiles[RM.GetAccRegions[ind].myPlayer]);
             }
+
+            // Redraw dice over the region (in the case of player owenrship change)
+            Vector3Int placeUnit = new Vector3Int(RM.GetAccRegions[ind].RegCenter.x, RM.GetAccRegions[ind].RegCenter.y, -8);
+            diceTilemap.SetTile(placeUnit, graphData.unitTile_class_01[RM.GetAccRegions[ind].myPlayer]);
         }
     }
 }
