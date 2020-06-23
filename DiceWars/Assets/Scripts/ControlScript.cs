@@ -83,8 +83,8 @@ namespace GameControls
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (canPickOnTiles)
-                {
+                //if (canPickOnTiles)
+                //{
                     Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
                     Vector3Int tV = tileGrid.WorldToCell(mV);
 
@@ -97,8 +97,8 @@ namespace GameControls
 
                     Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
 
-                    OnRegionClick();
-                }
+                    //OnRegionClick();
+                //}
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -109,9 +109,11 @@ namespace GameControls
 
             if (Input.GetMouseButtonDown(2))
             {
-                Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
-                Vector3Int tV = tileGrid.WorldToCell(mV);
-                RM.GetAdjacency(tV);
+                //Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
+                //Vector3Int tV = tileGrid.WorldToCell(mV);
+                //RM.GetAdjacency(tV);
+                ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+                CSoA.ActionIteration();
             }
         }
 
@@ -310,6 +312,17 @@ namespace GameControls
                 Debug.Log("Unsuccess change distribution");
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
                 RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
+            }
+        }
+
+        public void DarkRegion(int regionNum)
+        {
+            // Get coordinate of the region
+            int ind = RM.GetAccRegions.FindIndex(x => x.RegNum == regionNum);
+            if (ind != -1)
+            {
+                Vector3Int vct = RM.GetAccRegions[ind].RegCenter;
+                DarkRegion(vct);
             }
         }
 
