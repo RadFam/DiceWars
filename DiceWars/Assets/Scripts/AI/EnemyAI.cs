@@ -10,6 +10,7 @@ namespace GameAI
     public class EnemyAI : MonoBehaviour
     {
         private ControlScript myCS;
+        private ControlSequenceOfActions myCSoA;
         private int stageCntr;
         private int attackerReg;
         private int attackReg;
@@ -23,6 +24,7 @@ namespace GameAI
         void Start()
         {
             myCS = gameObject.GetComponent<ControlScript>();
+            myCSoA = gameObject.GetComponent<ControlSequenceOfActions>();
             regionAccessPlayerIndicies = new List<int>();
             regionEnemiesIndicies = new List<int>();
             regionEnemiesArmiesSuccess = new List<float>();
@@ -119,6 +121,11 @@ namespace GameAI
             int dice6_A = regA.myArmyOnRegion[0].myCount;
             int dice6_D = regD.myArmyOnRegion[0].myCount;
 
+            if (dice6_A == 1)
+            {
+                return 0.0f;
+            }
+
             worthAttack = ((float)dice6_A) / ((float)dice6_D);
 
             return worthAttack;
@@ -164,6 +171,8 @@ namespace GameAI
 
         IEnumerator FullAttackCoroutine(int numPlayer)
         {
+            int attackCounter = 0;
+
             while (!cannotFurtherAttack)
             {
                 // indicies of acessRegions with regions that belongs to the player
@@ -177,6 +186,8 @@ namespace GameAI
                     cannotFurtherAttack = true;
                 }
 
+                attackCounter = 0;
+                Debug.Log("STAGE FOR ATTACK");
                 foreach (int ind in regionAccessPlayerIndicies)
                 {
                     Debug.Log("Region " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString() + " search for chance to attack");
@@ -185,12 +196,6 @@ namespace GameAI
                     List<int> regNeib = myCS.GetRM.GetAccRegions[ind].RegBorder;
                     regionEnemiesArmiesSuccess.Clear();
                     regionEnemiesIndicies.Clear();
-
-                    Debug.Log("Current territory: " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString());
-                    foreach (int neib in regNeib)
-                    {
-                        //Debug.Log("Neighbour: " + neib.ToString());
-                    }
 
                     foreach (int neib in regNeib)
                     {
@@ -212,6 +217,7 @@ namespace GameAI
                     if (regionEnemiesIndicies.Count != 0)
                     {
                         // Choose enemy to attack
+                        attackCounter++;
 
                         Debug.Log("Ready to attack");
                         float mx = regionEnemiesArmiesSuccess.Max();
@@ -228,14 +234,25 @@ namespace GameAI
                         myCS.DarkRegion(attackReg);
                         yield return new WaitForSeconds(0.4f);
 
+                        ClashScript CS = gameObject.GetComponent<ClashScript>();
+                        bool res = CS.OnClash(myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[0]), myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[1]));
+                        myCS.ChangeArmyDistribution(res);
+
                         myCS.UndarkRegions();
                         yield return new WaitForSeconds(0.4f);
                     }
                 }
 
+                if (attackCounter == 0)
+                {
+                    cannotFurtherAttack = true;
+                }
+
                 // tmp stub
-                cannotFurtherAttack = true;
+                //cannotFurtherAttack = true;
             }
+
+            myCSoA.GoAhead();
         }
 
 
@@ -244,6 +261,23 @@ namespace GameAI
             yield return new WaitForSeconds(time);
             stageCntr++;
             AttackRegion(attackerReg, attackReg);
+        }
+
+        public void AddProportionalArmy(int numPlayer)
+        {
+            // Get List of all Player Territories
+            regionAccessPlayerIndicies.Clear();
+            regionAccessPlayerIndicies = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
+                .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == numPlayer)
+                .ToList();
+
+            if (regionAccessPlayerIndicies.Count > 0)
+            {
+                // Get number of connected territories
+
+                // Add army to every territory
+            }
+
         }
     }
 }

@@ -53,6 +53,11 @@ namespace GameControls
             set { canPickOnTiles = value; }
         }
 
+        public List<int> GetDarkenedRegions
+        {
+            get { return darkenedRegions; }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -83,8 +88,8 @@ namespace GameControls
         {
             if (Input.GetMouseButtonDown(0))
             {
-                //if (canPickOnTiles)
-                //{
+                if (canPickOnTiles)
+                {
                     Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
                     Vector3Int tV = tileGrid.WorldToCell(mV);
 
@@ -97,8 +102,8 @@ namespace GameControls
 
                     Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
 
-                    //OnRegionClick();
-                //}
+                    OnRegionClick();
+                }
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -113,7 +118,7 @@ namespace GameControls
                 //Vector3Int tV = tileGrid.WorldToCell(mV);
                 //RM.GetAdjacency(tV);
                 ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
-                CSoA.ActionIteration();
+                CSoA.GoAhead();
             }
         }
 
@@ -284,16 +289,18 @@ namespace GameControls
                 GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
                 gameUIVC.ShowClashAttack();
 
-                ChangeArmyDistribution(darkenedRegions[0], darkenedRegions[1], res);
+                ChangeArmyDistribution(res);
                 UndarkRegions();
 
                 canPickOnTiles = true;
             }
         }
 
-        public void ChangeArmyDistribution(int reg_1, int reg_2, bool successAttack)
+        public void ChangeArmyDistribution(bool successAttack)
         {
             // reg_1 and reg_2 - numbers of regions!!!
+            int reg_1 = darkenedRegions[0];
+            int reg_2 = darkenedRegions[1];
 
             if (successAttack)
             {
@@ -387,7 +394,7 @@ namespace GameControls
 
         private void SubdrawRegion(int regNum, bool darken)
         {
-            Debug.Log("Subdraw region: " + regNum.ToString());
+            //Debug.Log("Subdraw region: " + regNum.ToString());
             int ind = RM.GetAccRegions.FindIndex(x => x.RegNum == regNum);
 
             Color hexColor;

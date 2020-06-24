@@ -27,7 +27,7 @@ namespace GameControls
             myAI = gameObject.GetComponent<EnemyAI>();
             myCS.CurrPlayerNum = allplayerNums[0];
 
-            currPlay = 0;
+            currPlay = -1;
         }
 
         public void ActionIteration()
