@@ -24,6 +24,7 @@ namespace RegionStructure
         private int[,] regionAdjacencyDBL;
 
         private bool[] visited;
+        private List<int> visitedWithNum;
         private int sparceAttempts = 100;
 
         public int[,] GetAdjMatrix
@@ -67,6 +68,7 @@ namespace RegionStructure
             allRegions = new List<Region>();
             accessRegions = new List<Region>();
             visited = new bool[regionsNum];
+            visitedWithNum = new List<int>(regionsNum);
             regionAdjacency = new int[regionsNum, regionsNum];
             regionAdjacencyDBL = new int[regionsNum, regionsNum];
             regionAssign = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
@@ -80,6 +82,10 @@ namespace RegionStructure
                 int x = i % (2 * deltaXTile + 1) - deltaXTile;
                 int y = (i - (i % (2 * deltaXTile + 1))) / (2 * deltaXTile + 1) - deltaYTile;
                 tileCoords[i] = new Vector3Int(x, y, 0);
+            }
+            for (int i = 0; i < regionsNum; ++i)
+            {
+                visitedWithNum.Add(0);
             }
         }
 
@@ -795,6 +801,60 @@ namespace RegionStructure
             }
 
             return ansReg;
+        }
+
+        public int GetPlayerMaxConnectedTerritorySize(int playerNum)
+        {
+            int ans = 0;
+
+            for (int k = 0; k < regionsNum; ++k)
+            {
+                visitedWithNum[k] = 0;
+            }
+
+            List<int> playerRegNums = new List<int>();
+            foreach (Region reg in accessRegions)
+            {
+                if (reg.myPlayer == playerNum)
+                {
+                    playerRegNums.Add(reg.RegNum);
+                }
+            }
+
+            int cntValue = 1;
+            foreach (int rgNum in playerRegNums)
+            {
+                DFSwithNum(rgNum, cntValue, ref playerRegNums);
+                cntValue++;
+            }
+
+            // watch which number is bigger
+            for (int i = 1; i < regionsNum+1; ++i)
+            {
+                int val = visitedWithNum.Where(x => x == i).Count();
+                if (val > ans)
+                {
+                    ans = val;
+                }
+            }
+
+            return ans; 
+        }
+
+        private void DFSwithNum(int regNum, int value, ref List<int> playerRegs)
+        {
+            if (visitedWithNum[regNum] != 0)
+            {
+                return;
+            }
+            visitedWithNum[regNum] = value;
+            for (int i = 0; i < regionsNum; ++i)
+            {
+                if (regionAdjacency[regionsNum, i] == 1 && visitedWithNum[i] == 0 && playerRegs.Contains(i))
+                {
+                    DFSwithNum(i, value, ref playerRegs);
+                }
+            }
         }
     }
 }
