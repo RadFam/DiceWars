@@ -61,5 +61,10 @@ namespace BattleUnitStructure
         {
             myCount = 1;
         }
+
+        public bool IsFullFilled()
+        {
+            return myCount == maxUnitOnTerritory;
+        }
     }
 }

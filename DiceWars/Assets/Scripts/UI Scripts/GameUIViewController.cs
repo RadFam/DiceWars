@@ -9,6 +9,7 @@ namespace UIControls
     {
         [SerializeField]
         UIBattleFieldScript uiBfs;
+        [SerializeField]
         UIBattleAIFieldScript uiAIBfs;
 
         public void ShowClashAttack()

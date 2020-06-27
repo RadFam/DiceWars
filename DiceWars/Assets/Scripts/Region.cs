@@ -125,6 +125,17 @@ namespace RegionStructure
             return army;
         }
 
+        public bool CheckArmyFullfilled(ControlScript.ArmyTypes type)
+        {
+            int ind = myArmyOnRegion.FindIndex(x => x.myType == type);
+            if (ind != -1)
+            {
+                return myArmyOnRegion[ind].IsFullFilled();
+            }
+
+            return false;
+        }
+
         public BattleUnit GetArmyUnit(ControlScript.ArmyTypes type)
         {
             int ind = myArmyOnRegion.FindIndex(x => x.myType == type);

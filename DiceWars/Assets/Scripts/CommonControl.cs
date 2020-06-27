@@ -53,6 +53,8 @@ namespace GameControls
         public BattleUnitGraphics allGraphics;
         public ClashStack battleStack;
 
+        List<int> playersReserve;
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -60,7 +62,26 @@ namespace GameControls
             {
                 instance = this;
                 battleStack.SelfInitiate();
+
+                playersReserve = new List<int>();
+                for (int i = 0; i < 8; ++i)
+                {
+                    playersReserve.Add(0);
+                }
             }
+        }
+
+        public void SetToReserve(int value, int playerNum)
+        {
+            if (playerNum < 8)
+            {
+                playersReserve[playerNum] = Mathf.Max(playersReserve[playerNum] + value, 0);
+            }
+        }
+
+        public int GetFromReserve(int playerNum)
+        {
+            return playersReserve[playerNum];
         }
 
         public void ResertStack()
