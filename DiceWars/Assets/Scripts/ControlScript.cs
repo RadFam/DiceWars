@@ -249,7 +249,9 @@ namespace GameControls
             {
                 Vector3Int placeUnit = new Vector3Int(reg.RegCenter.x, reg.RegCenter.y, -8);
                 int player = reg.myPlayer;
+                int diceCount = reg.GetArmy(ArmyTypes.Dice_d6);
                 diceTilemap.SetTile(placeUnit, graphData.unitTile_class_01[player]);
+                DrawDiceReserve(placeUnit, player, diceCount, ArmyTypes.Dice_d6);
             }
         }
 
@@ -392,7 +394,7 @@ namespace GameControls
             darkenedRegions.Clear();
         }
 
-        private void SubdrawRegion(int regNum, bool darken)
+        public void SubdrawRegion(int regNum, bool darken)
         {
             //Debug.Log("Subdraw region: " + regNum.ToString());
             int ind = RM.GetAccRegions.FindIndex(x => x.RegNum == regNum);
@@ -418,7 +420,42 @@ namespace GameControls
 
             // Redraw dice over the region (in the case of player owenrship change)
             Vector3Int placeUnit = new Vector3Int(RM.GetAccRegions[ind].RegCenter.x, RM.GetAccRegions[ind].RegCenter.y, -8);
-            diceTilemap.SetTile(placeUnit, graphData.unitTile_class_01[RM.GetAccRegions[ind].myPlayer]);
+            //diceTilemap.SetTile(placeUnit, graphData.unitTile_class_01[RM.GetAccRegions[ind].myPlayer]);
+            DrawDiceReserve(placeUnit, RM.GetAccRegions[ind].myPlayer, RM.GetAccRegions[ind].GetArmy(ArmyTypes.Dice_d6), ArmyTypes.Dice_d6);
+        }
+
+        private void DrawDiceReserve(Vector3Int placeUnit, int playerNum, int diceCount, ArmyTypes type)
+        {
+            if (type == ArmyTypes.Dice_d6)
+            {
+                switch (playerNum)
+                {
+                    case 0:
+                        diceTilemap.SetTile(placeUnit, graphData.aquaDice_Reserve_d6[diceCount-1]);
+                        break;
+                    case 1:
+                        diceTilemap.SetTile(placeUnit, graphData.blueDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 2:
+                        diceTilemap.SetTile(placeUnit, graphData.greenDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 3:
+                        diceTilemap.SetTile(placeUnit, graphData.orangeDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 4:
+                        diceTilemap.SetTile(placeUnit, graphData.purpleDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 5:
+                        diceTilemap.SetTile(placeUnit, graphData.redDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 6:
+                        diceTilemap.SetTile(placeUnit, graphData.whiteDice_Reserve_d6[diceCount - 1]);
+                        break;
+                    case 7:
+                        diceTilemap.SetTile(placeUnit, graphData.yellowDice_Reserve_d6[diceCount - 1]);
+                        break;
+                }
+            }
         }
     }
 }

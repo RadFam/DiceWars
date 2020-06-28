@@ -14,4 +14,13 @@ public class BattleUnitGraphics : ScriptableObject
     public List<Sprite> valueSprite_class_d6_black;
 
     public List<Sprite> battleSwords;
+
+    public List<Tile> redDice_Reserve_d6;
+    public List<Tile> blueDice_Reserve_d6;
+    public List<Tile> greenDice_Reserve_d6;
+    public List<Tile> yellowDice_Reserve_d6;
+    public List<Tile> whiteDice_Reserve_d6;
+    public List<Tile> aquaDice_Reserve_d6;
+    public List<Tile> orangeDice_Reserve_d6;
+    public List<Tile> purpleDice_Reserve_d6;
 }

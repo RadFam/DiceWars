@@ -11,6 +11,7 @@ namespace GameAI
     {
         private ControlScript myCS;
         private ControlSequenceOfActions myCSoA;
+        private ControlArmyGrowthScript myCAGS;
         private int stageCntr;
         private int attackerReg;
         private int attackReg;
@@ -25,6 +26,7 @@ namespace GameAI
         {
             myCS = gameObject.GetComponent<ControlScript>();
             myCSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+            myCAGS = gameObject.GetComponent<ControlArmyGrowthScript>();
             regionAccessPlayerIndicies = new List<int>();
             regionEnemiesIndicies = new List<int>();
             regionEnemiesArmiesSuccess = new List<float>();
@@ -252,6 +254,8 @@ namespace GameAI
                 //cannotFurtherAttack = true;
             }
 
+            myCAGS.StartArmyIncrease(numPlayer);
+
             myCSoA.GoAhead();
         }
 
@@ -265,6 +269,8 @@ namespace GameAI
 
         public void AddProportionalArmy(int numPlayer)
         {
+            
+
             // Get List of all Player Territories
             regionAccessPlayerIndicies.Clear();
             regionAccessPlayerIndicies = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)

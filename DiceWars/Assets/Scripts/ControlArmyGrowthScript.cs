@@ -41,6 +41,7 @@ namespace GameControls
         {
             // Get number of dices, that we need to add to player
             int dices = myCS.GetRM.GetPlayerMaxConnectedTerritorySize(currPlayer);
+            Debug.Log("MAX added dices value is: " + dices.ToString());
 
             // Set this dices to the reserve
             CommonControl.instance.SetToReserve(dices, currPlayer);
@@ -54,6 +55,7 @@ namespace GameControls
                     if (ChooseRegionToAddDice(currPlayer, out regNum))
                     {
                         CommonControl.instance.SetToReserve(-1, currPlayer);
+                        myCS.SubdrawRegion(regNum, false);
                     }
                     else
                     {
