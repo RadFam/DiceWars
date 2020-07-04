@@ -68,7 +68,7 @@ namespace RegionStructure
             allRegions = new List<Region>();
             accessRegions = new List<Region>();
             visited = new bool[regionsNum];
-            visitedWithNum = new List<int>(regionsNum);
+            visitedWithNum = new List<int>();
             regionAdjacency = new int[regionsNum, regionsNum];
             regionAdjacencyDBL = new int[regionsNum, regionsNum];
             regionAssign = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
@@ -847,11 +847,21 @@ namespace RegionStructure
             {
                 return;
             }
+
             visitedWithNum[regNum] = value;
+            //Debug.Log("Region num is: " + regNum.ToString() + "  visitedWithNum.Length is: " + visitedWithNum.Count.ToString() + "  playerRegs.Length is: " + playerRegs.Count.ToString());
             for (int i = 0; i < regionsNum; ++i)
             {
-                if (regionAdjacency[regionsNum, i] == 1 && visitedWithNum[i] == 0 && playerRegs.Contains(i))
+                /*
+                Debug.Log("Cycle in");
+                Debug.Log("i: " + i.ToString() + "  regionsNum: " + regionsNum.ToString());
+                Debug.Log(regionAdjacency[regionsNum, i].ToString());
+                Debug.Log(visitedWithNum[i].ToString());
+                Debug.Log(playerRegs.Contains(i));
+                */
+                if (regionAdjacency[regNum, i] == 1 && visitedWithNum[i] == 0 && playerRegs.Contains(i))
                 {
+                    //Debug.Log("Condotion in");
                     DFSwithNum(i, value, ref playerRegs);
                 }
             }

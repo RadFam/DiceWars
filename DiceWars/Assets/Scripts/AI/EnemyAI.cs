@@ -43,74 +43,6 @@ namespace GameAI
             cannotFurtherAttack = false;
 
             StartCoroutine(FullAttackCoroutine(numPlayer));
-
-            /*
-            while (!cannotFurtherAttack)
-            {
-                // indicies of acessRegions with regions that belongs to the player
-                regionAccessPlayerIndicies.Clear();
-                regionAccessPlayerIndicies = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
-                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == numPlayer)
-                    .ToList();
-
-                if (regionAccessPlayerIndicies.Count == 0)
-                {
-                    cannotFurtherAttack = true;
-                }
-
-                foreach (int ind in regionAccessPlayerIndicies)
-                {
-                    Debug.Log("Region " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString() + " search for chance to attack");
-
-                    // Check if region has neighbours with other player
-                    List<int> regNeib = myCS.GetRM.GetAccRegions[ind].RegBorder;
-                    regionEnemiesArmiesSuccess.Clear();
-                    regionEnemiesIndicies.Clear();
-
-                    Debug.Log("Current territory: " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString());
-                    foreach (int neib in regNeib)
-                    {
-                        //Debug.Log("Neighbour: " + neib.ToString());
-                    }
-
-                    foreach (int neib in regNeib)
-                    {
-                        int indd = myCS.GetRM.GetAccRegions.FindIndex(x => x.RegNum == neib);
-                        if (indd != -1)
-                        {
-                            Region reg = myCS.GetRM.GetAccRegions.Find(x => x.RegNum == neib);
-                            if (reg.myPlayer != numPlayer)
-                            {
-                                float success = CheckWorthToAttack(myCS.GetRM.GetAccRegions[ind].RegNum, reg.RegNum);
-                                if (success >= 1.0f)
-                                {
-                                    regionEnemiesArmiesSuccess.Add(success);
-                                    regionEnemiesIndicies.Add(reg.RegNum);
-                                }
-                            }
-                        }
-                    }
-                    if (regionEnemiesIndicies.Count != 0)
-                    {
-                        // Choose enemy to attack
-                        
-                        Debug.Log("Ready to attack");
-                        float mx = regionEnemiesArmiesSuccess.Max();
-                        int mInd = regionEnemiesArmiesSuccess.FindIndex(x => x == mx);
-
-                        stageCntr = 0;
-                        attackerReg = myCS.GetRM.GetAccRegions[ind].RegNum;
-                        attackReg = regionEnemiesIndicies[mInd];
-
-                        //AttackRegion(attackerReg, attackReg);
-                        //StartCoroutine(AttackCoroutine(attackerReg, attackReg, 0.4f));
-                    }
-                }
-
-                // tmp stub
-                cannotFurtherAttack = true;
-            }
-            */
         }
 
         public float CheckWorthToAttack(int regNumA, int regNumD)
@@ -189,10 +121,10 @@ namespace GameAI
                 }
 
                 attackCounter = 0;
-                Debug.Log("STAGE FOR ATTACK");
+                //Debug.Log("STAGE FOR ATTACK");
                 foreach (int ind in regionAccessPlayerIndicies)
                 {
-                    Debug.Log("Region " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString() + " search for chance to attack");
+                    //Debug.Log("Region " + myCS.GetRM.GetAccRegions[ind].RegNum.ToString() + " search for chance to attack");
 
                     // Check if region has neighbours with other player
                     List<int> regNeib = myCS.GetRM.GetAccRegions[ind].RegBorder;
@@ -221,7 +153,7 @@ namespace GameAI
                         // Choose enemy to attack
                         attackCounter++;
 
-                        Debug.Log("Ready to attack");
+                        //Debug.Log("Ready to attack");
                         float mx = regionEnemiesArmiesSuccess.Max();
                         int mInd = regionEnemiesArmiesSuccess.FindIndex(x => x == mx);
 
@@ -229,7 +161,7 @@ namespace GameAI
                         attackerReg = myCS.GetRM.GetAccRegions[ind].RegNum;
                         attackReg = regionEnemiesIndicies[mInd];
 
-                        Debug.Log("Region " + attackerReg.ToString() + " attacks region " + attackReg.ToString());
+                        //Debug.Log("Region " + attackerReg.ToString() + " attacks region " + attackReg.ToString());
                         myCS.DarkRegion(attackerReg);
                         yield return new WaitForSeconds(0.4f);
 

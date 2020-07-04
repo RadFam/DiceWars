@@ -32,6 +32,7 @@ namespace GameControls
             for (int i = 0; i < playerRegionNumbers.Count; ++i)
             {
                 canAddList.Add(true);
+                //Debug.Log("CURRENT PLAYER REGION: " + playerRegionNumbers[i].ToString());
             }
 
             StartCoroutine(ConsequenceArmyIncrease());
@@ -50,10 +51,13 @@ namespace GameControls
 
             while (canAdd)
             {
+                //Debug.Log("Come into while cycle");
                 if (CommonControl.instance.GetFromReserve(currPlayer) > 0)
                 {
+                    //Debug.Log("Come into if station 1");
                     if (ChooseRegionToAddDice(currPlayer, out regNum))
                     {
+                        //Debug.Log("Chosen reg to add: " + regNum.ToString());
                         CommonControl.instance.SetToReserve(-1, currPlayer);
                         myCS.SubdrawRegion(regNum, false);
                     }
@@ -100,9 +104,12 @@ namespace GameControls
                         canAddList[index] = false;
                         cntr++;
                     }
-
-                    regNum = playerRegionNumbers[index];
-                    break;
+                    else
+                    {
+                        //regNum = playerRegionNumbers[index];
+                        regNum = myCS.GetRM.GetAccRegions[playerRegionNumbers[index]].RegNum;
+                        break;
+                    }
                 }
             }
 

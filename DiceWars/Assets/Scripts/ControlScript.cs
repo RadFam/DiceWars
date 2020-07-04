@@ -431,7 +431,7 @@ namespace GameControls
                 switch (playerNum)
                 {
                     case 0:
-                        diceTilemap.SetTile(placeUnit, graphData.aquaDice_Reserve_d6[diceCount-1]);
+                        diceTilemap.SetTile(placeUnit, graphData.aquaDice_Reserve_d6[diceCount - 1]);
                         break;
                     case 1:
                         diceTilemap.SetTile(placeUnit, graphData.blueDice_Reserve_d6[diceCount - 1]);
