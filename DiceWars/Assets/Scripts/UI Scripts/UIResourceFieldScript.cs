@@ -8,6 +8,9 @@ namespace UIControls
 {
     public class UIResourceFieldScript : MonoBehaviour
     {
+        public delegate void EndStep();
+        public EndStep endStep;
+
         public Text resVolume;
         public List<UIDiceScript> diceReserve;
 
@@ -45,6 +48,7 @@ namespace UIControls
         public void SetPlayer(int playerNum)
         {
             resVol = CommonControl.instance.GetFromReserve(playerNum);
+            Debug.Log("SAVED RESOURCE: " + resVol.ToString());
 
             int vl = Mathf.Min(resVol, diceReserve.Count);
 
@@ -62,7 +66,7 @@ namespace UIControls
             {
                 if (resVol < diceReserve.Count)
                 {
-                    diceReserve[resVol].ClearData();
+                    diceReserve[resVol-1].ClearData();
                 }
                 resVol--;
 

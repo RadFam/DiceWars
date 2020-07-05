@@ -13,6 +13,7 @@ namespace GameControls
         private List<int> allplayerNums; // sequence of player numbers
 
         private ControlScript myCS;
+        private ControlArmyGrowthScript myCAGS;
         private EnemyAI myAI;
         private int currPlay;
 
@@ -25,6 +26,7 @@ namespace GameControls
 
             myCS = gameObject.GetComponent<ControlScript>();
             myAI = gameObject.GetComponent<EnemyAI>();
+            myCAGS = gameObject.GetComponent<ControlArmyGrowthScript>();
             myCS.CurrPlayerNum = allplayerNums[0];
 
             currPlay = -1;
@@ -50,14 +52,20 @@ namespace GameControls
         }
 
         public void GoAhead()
-        {
-            currPlay += 1;
-            currPlay = currPlay % allgamerNums.Count;
+        {  
             StartCoroutine(BetweenPause()); // Maybe here we can invoke drawing of dice stashing
         }
 
         IEnumerator BetweenPause()
         {
+            if (currPlay != -1)
+            {
+                // Вставить анимацию увеличения числа кубиков
+                yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(currPlay));
+            }
+            currPlay += 1;
+            currPlay = currPlay % allgamerNums.Count;
+
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
         }

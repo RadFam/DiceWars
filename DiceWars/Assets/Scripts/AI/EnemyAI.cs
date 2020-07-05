@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using GameControls;
 using RegionStructure;
+using UIControls;
 
 namespace GameAI
 {
@@ -64,7 +65,8 @@ namespace GameAI
 
             return worthAttack;
         }
-
+        
+        /*
         public void AttackRegion(int regionNumA, int regionNumD)
         {
             if (stageCntr == 0)
@@ -89,7 +91,9 @@ namespace GameAI
                 stageCntr = 0;
             }   
         }
+        */
 
+        /*
         IEnumerator AttackCoroutine(int regionNumA, int regionNumD, float time)
         {
             Debug.Log("Region " + regionNumA.ToString() + " attacks region " + regionNumD.ToString());
@@ -102,6 +106,7 @@ namespace GameAI
             myCS.UndarkRegions();
             yield return new WaitForSeconds(time);
         }
+        */
 
         IEnumerator FullAttackCoroutine(int numPlayer)
         {
@@ -172,6 +177,8 @@ namespace GameAI
                         bool res = CS.OnClash(myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[0]), myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[1]));
                         myCS.ChangeArmyDistribution(res);
 
+                        yield return StartCoroutine(FindObjectOfType<GameUIViewController>().ShowAIClashAttack().Dices_AB_AI());
+
                         myCS.UndarkRegions();
                         yield return new WaitForSeconds(0.4f);
                     }
@@ -186,23 +193,24 @@ namespace GameAI
                 //cannotFurtherAttack = true;
             }
 
-            myCAGS.StartArmyIncrease(numPlayer);
+            //myCAGS.StartArmyIncrease(numPlayer);
 
             myCSoA.GoAhead();
         }
 
 
+        /*
         IEnumerator PauseCoroutine(float time)
         {
             yield return new WaitForSeconds(time);
             stageCntr++;
             AttackRegion(attackerReg, attackReg);
         }
+        */
 
+        /*
         public void AddProportionalArmy(int numPlayer)
-        {
-            
-
+        {    
             // Get List of all Player Territories
             regionAccessPlayerIndicies.Clear();
             regionAccessPlayerIndicies = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
@@ -217,6 +225,7 @@ namespace GameAI
             }
 
         }
+        */
     }
 }
 

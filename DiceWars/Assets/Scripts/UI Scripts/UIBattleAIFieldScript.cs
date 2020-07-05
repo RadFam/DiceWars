@@ -26,7 +26,7 @@ namespace UIControls
         {
             sum_A = 0;
             sum_B = 0;
-            UIAnimationStage();
+            //UIAnimationStage();
         }
 
         public void OnDisable()
@@ -122,7 +122,7 @@ namespace UIControls
             StartCoroutine(Dices_AB_AI());
         }
 
-        IEnumerator Dices_AB_AI()
+        public IEnumerator Dices_AB_AI()
         {
             ClearImages(0);
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_1.Count; ++i)

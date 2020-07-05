@@ -12,6 +12,7 @@ namespace GameControls
         int currPlayer;
         List<int> playerRegionNumbers;
         List<bool> canAddList;
+        GameUIViewController gameUI;
 
         // Start is called before the first frame update
         void Start()
@@ -19,6 +20,7 @@ namespace GameControls
             myCS = gameObject.GetComponent<ControlScript>();
             playerRegionNumbers = new List<int>();
             canAddList = new List<bool>();
+            gameUI = FindObjectOfType<GameUIViewController>();
         }
 
         public void StartArmyIncrease(int playerNum)
@@ -35,11 +37,23 @@ namespace GameControls
                 //Debug.Log("CURRENT PLAYER REGION: " + playerRegionNumbers[i].ToString());
             }
 
-            StartCoroutine(ConsequenceArmyIncrease());
+            StartCoroutine(ConsequenceArmyIncrease(playerNum));
         }
 
-        IEnumerator ConsequenceArmyIncrease()
+        public IEnumerator ConsequenceArmyIncrease(int playerNum)
         {
+            currPlayer = playerNum;
+            canAddList.Clear();
+            playerRegionNumbers.Clear();
+            playerRegionNumbers = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
+                .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == currPlayer)
+                .ToList();
+            for (int i = 0; i < playerRegionNumbers.Count; ++i)
+            {
+                canAddList.Add(true);
+                //Debug.Log("CURRENT PLAYER REGION: " + playerRegionNumbers[i].ToString());
+            }
+
             // Get number of dices, that we need to add to player
             int dices = myCS.GetRM.GetPlayerMaxConnectedTerritorySize(currPlayer);
             Debug.Log("MAX added dices value is: " + dices.ToString());
@@ -48,6 +62,11 @@ namespace GameControls
             CommonControl.instance.SetToReserve(dices, currPlayer);
             bool canAdd = true;
             int regNum = 0;
+
+            UIResourceFieldScript uiRfs = gameUI.ShowResourceGrowth();
+            uiRfs.SetPlayer(currPlayer);
+
+            //yield return new WaitForSeconds(3.0f);
 
             while (canAdd)
             {
@@ -60,6 +79,7 @@ namespace GameControls
                         //Debug.Log("Chosen reg to add: " + regNum.ToString());
                         CommonControl.instance.SetToReserve(-1, currPlayer);
                         myCS.SubdrawRegion(regNum, false);
+                        uiRfs.ClickMinus();
                     }
                     else
                     {
@@ -71,10 +91,16 @@ namespace GameControls
                     canAdd = false;
                 }
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.3f);
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.3f);
+            uiRfs.gameObject.SetActive(false);
+
+            Debug.Log("Rest of dices: " + CommonControl.instance.GetFromReserve(currPlayer).ToString());
+
+            //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+            //CSoA.GoAhead();
         }
 
         public bool ChooseRegionToAddDice(int playerNum, out int regNum)
@@ -91,7 +117,7 @@ namespace GameControls
             while (cntr < playerRegionNumbers.Count)
             {
                 // Choose random number of region
-                int index = Random.Range(0, playerRegionNumbers.Count + 1);
+                int index = Random.Range(0, playerRegionNumbers.Count);
                 if (canAddList[index] == true)
                 {
                     // Add dice to the region playerRegionNumbers[index]
