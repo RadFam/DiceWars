@@ -78,7 +78,7 @@ namespace UIControls
             sum_B = 0;
 
             ControlSequenceOfActions csoa = FindObjectOfType<ControlSequenceOfActions>();
-            csoa.GoAhead();
+            //csoa.GoAhead();
             gameObject.SetActive(false);
         }
 

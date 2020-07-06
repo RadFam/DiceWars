@@ -34,8 +34,8 @@ namespace UIControls
             ClearImages(0);
             ClearImages(1);
 
-            score_A.text = "00";
-            score_B.text = "00";
+            score_A.text = "0";
+            score_B.text = "0";
 
             sum_A = 0;
             sum_B = 0;
@@ -132,7 +132,7 @@ namespace UIControls
                 DrawDice(i, 0, 0);
                 yield return new WaitForSeconds(.1f);
             }
-            ClearImages(0);
+            //ClearImages(0);
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_2.Count; ++i)
             {
                 sum_A += CommonControl.instance.battleStack.playerA_res_2[i];
@@ -140,7 +140,7 @@ namespace UIControls
                 DrawDice(i, 0, 1);
                 yield return new WaitForSeconds(.1f);
             }
-            ClearImages(0);
+            //ClearImages(0);
             for (int i = 0; i < CommonControl.instance.battleStack.playerA_res_3.Count; ++i)
             {
                 sum_A += CommonControl.instance.battleStack.playerA_res_3[i];
@@ -157,7 +157,7 @@ namespace UIControls
                 DrawDice(i, 1, 0);
                 yield return new WaitForSeconds(.1f);
             }
-            ClearImages(1);
+            //ClearImages(1);
             for (int i = 0; i < CommonControl.instance.battleStack.playerB_res_2.Count; ++i)
             {
                 sum_B += CommonControl.instance.battleStack.playerB_res_2[i];
@@ -165,7 +165,7 @@ namespace UIControls
                 DrawDice(i, 1, 1);
                 yield return new WaitForSeconds(.1f);
             }
-            ClearImages(1);
+            //ClearImages(1);
             for (int i = 0; i < CommonControl.instance.battleStack.playerB_res_3.Count; ++i)
             {
                 sum_B += CommonControl.instance.battleStack.playerB_res_3[i];
@@ -174,7 +174,7 @@ namespace UIControls
                 yield return new WaitForSeconds(.1f);
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.4f);
 
             OnDisable();
         }

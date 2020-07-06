@@ -285,13 +285,19 @@ namespace GameControls
                 // Start Attack procedure
                 canPickOnTiles = false;
 
-                ClashScript CS = gameObject.GetComponent<ClashScript>();
-                bool res = CS.OnClash(RM.GetCoordByRegion(darkenedRegions[0]), RM.GetCoordByRegion(darkenedRegions[1]));
+                int checkArmy = RM.GetRegionByCoords(RM.GetCoordByRegion(darkenedRegions[0])).GetArmyUnit(ArmyTypes.Dice_d6).myCount;
 
-                GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
-                gameUIVC.ShowClashAttack();
+                if (checkArmy > 1)
+                {
+                    ClashScript CS = gameObject.GetComponent<ClashScript>();
+                    bool res = CS.OnClash(RM.GetCoordByRegion(darkenedRegions[0]), RM.GetCoordByRegion(darkenedRegions[1]));
 
-                ChangeArmyDistribution(res);
+                    GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+                    gameUIVC.ShowClashAttack();
+
+                    ChangeArmyDistribution(res);
+                }
+
                 UndarkRegions();
 
                 canPickOnTiles = true;
