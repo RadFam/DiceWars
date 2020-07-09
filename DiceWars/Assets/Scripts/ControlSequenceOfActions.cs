@@ -34,21 +34,35 @@ namespace GameControls
 
         public void ActionIteration()
         {
-            myCS.CanTilePicking = false;
-            int ind = allplayerNums.FindIndex(x => x == allgamerNums[currPlay]);
-            if (ind == -1)
+            int terrNum = 0;
+            terrNum = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
+                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == currPlay)
+                    .ToList().Count;
+
+            if (terrNum > 0)
             {
-                // Block in ControlScript ability to click on tilemap
                 myCS.CanTilePicking = false;
-                // Invoke EnemyAI
-                myAI.EnemyPlayerAttacks(allgamerNums[currPlay]);
+                int ind = allplayerNums.FindIndex(x => x == allgamerNums[currPlay]);
+                if (ind == -1)
+                {
+                    // Block in ControlScript ability to click on tilemap
+                    myCS.CanTilePicking = false;
+                    // Invoke EnemyAI
+                    myAI.EnemyPlayerAttacks(allgamerNums[currPlay]);
+                }
+                else
+                {
+                    // Deblock in ControlScript ability to click on tilemap
+                    myCS.CanTilePicking = true;
+                    myCS.CurrPlayerNum = allplayerNums[ind];
+                }
             }
             else
             {
-                // Deblock in ControlScript ability to click on tilemap
-                myCS.CanTilePicking = true;
-                myCS.CurrPlayerNum = allplayerNums[ind];
+                GoAhead();
             }
+
+            
         }
 
         public void GoAhead()
@@ -58,7 +72,16 @@ namespace GameControls
 
         IEnumerator BetweenPause()
         {
+            // Check if player have territories yet
+            int terrNum = 0;
             if (currPlay != -1)
+            {
+                terrNum = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
+                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == currPlay)
+                    .ToList().Count;
+            }
+
+            if (currPlay != -1 && terrNum > 0)
             {
                 // Вставить анимацию увеличения числа кубиков
                 yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(currPlay));
@@ -68,6 +91,8 @@ namespace GameControls
 
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
+            
+            
         }
 
     }
