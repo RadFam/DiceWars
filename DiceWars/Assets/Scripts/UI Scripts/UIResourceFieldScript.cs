@@ -64,7 +64,7 @@ namespace UIControls
         {
             if (resVol > 0)
             {
-                if (resVol < diceReserve.Count)
+                if (resVol <= diceReserve.Count)
                 {
                     diceReserve[resVol-1].ClearData();
                 }
