@@ -20,9 +20,9 @@ namespace GameControls
         void Start()
         {
             // Temporary
-            // .....let the list of allgamerNums is the range of 0 to 7
-            allgamerNums = Enumerable.Range(0, 7).ToList();
-            allplayerNums = Enumerable.Range(1, 1).ToList();
+            // .....let the list of allgamerNums is the range of 0 to 7 (!!!!!!!!)
+            allgamerNums = Enumerable.Range(0, 7).ToList(); // List of all players
+            allplayerNums = Enumerable.Range(1, 1).ToList(); // List of human players
 
             myCS = gameObject.GetComponent<ControlScript>();
             myAI = gameObject.GetComponent<EnemyAI>();
@@ -30,6 +30,65 @@ namespace GameControls
             myCS.CurrPlayerNum = allplayerNums[0];
 
             currPlay = -1;
+        }
+
+        public void SetAllPlayersNum(int num)
+        {
+            if (num <= 7)
+            {
+                allgamerNums.Clear();
+                allgamerNums = Enumerable.Range(0, num).ToList();
+            }
+        }
+
+        public int AddHumanPlayer()
+        {
+            int plr = 0;
+
+            bool tryNext = true;
+
+            while (tryNext)
+            {
+                plr = Random.Range(0, allgamerNums.Count);
+                if (!allplayerNums.Contains(plr))
+                {
+                    allplayerNums.Add(plr);
+                    tryNext = false;
+                }
+            }
+
+            return plr;
+        }
+
+        public void RemoveHumanPlayer()
+        {
+            if (allplayerNums.Count > 1)
+            {
+                allplayerNums.RemoveAt(allplayerNums.Count - 1);
+            }
+        }
+
+        public int ChangeHumanPlayer(int plNum)
+        {
+            int plr = 0;
+            bool tryNext = true;
+
+            if (allplayerNums.Count == allgamerNums.Count)
+            {
+                return -1;
+            }
+
+            while (tryNext)
+            {
+                plr = Random.Range(0, allgamerNums.Count);
+                if (!allplayerNums.Contains(plr))
+                {
+                    allplayerNums[plNum] = plr;
+                    tryNext = false;
+                }
+            }
+
+            return plr;
         }
 
         public void ActionIteration()
@@ -91,8 +150,7 @@ namespace GameControls
 
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
-            
-            
+                        
         }
 
     }

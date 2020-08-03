@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace UIControls
+namespace GameControls
 {
-    public class MenuOneUIScript : MonoBehaviour
+    public class ControlNotDestroyScript : MonoBehaviour
     {
-        [SerializeField]
-        private List<EnemyElementScript> allEnemies;
+        void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -17,4 +18,3 @@ namespace UIControls
         }
     }
 }
-    

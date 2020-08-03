@@ -49,6 +49,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c8360d1682366f3449159fe68becbcd8, type: 3}
   - {fileID: 21300000, guid: bfd81d786565310458158f8b53ff20fa, type: 3}
   - {fileID: 21300000, guid: 9c9b9575b0d9a4941834455281d19e9d, type: 3}
+  enemyElements:
+  - {fileID: 21300000, guid: a0210da444fd24148ae4a491fd3332f7, type: 3}
+  - {fileID: 21300000, guid: ffcf6f16f8a219e45a1e9e57f256a24a, type: 3}
   redDice_Reserve_d6:
   - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
   - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}

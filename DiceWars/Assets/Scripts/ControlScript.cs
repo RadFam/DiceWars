@@ -22,8 +22,8 @@ namespace GameControls
 
         private BattleUnitGraphics graphData;
 
-        public int playersCount;
-        public int initArmy;
+        public int playersCount; // Number of all players
+        public int initArmy; // Initial value of dices for each player
 
         private Vector3Int position;
         private Camera cam;
@@ -35,7 +35,7 @@ namespace GameControls
         private bool canPickOnTiles;
 
         [SerializeField]
-        private int initPlayerNum;
+        private int initPlayerNum; // number of player which starts the game
         public int CurrPlayerNum
         {
             get { return initPlayerNum; }
