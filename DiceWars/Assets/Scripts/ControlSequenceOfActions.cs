@@ -21,7 +21,7 @@ namespace GameControls
         {
             // Temporary
             // .....let the list of allgamerNums is the range of 0 to 7 (!!!!!!!!)
-            allgamerNums = Enumerable.Range(0, 7).ToList(); // List of all players
+            allgamerNums = Enumerable.Range(0, 2).ToList(); // List of all players
             allplayerNums = Enumerable.Range(1, 1).ToList(); // List of human players
 
             myCS = gameObject.GetComponent<ControlScript>();
@@ -34,7 +34,7 @@ namespace GameControls
 
         public void SetAllPlayersNum(int num)
         {
-            if (num <= 7)
+            if (num <= 8)
             {
                 allgamerNums.Clear();
                 allgamerNums = Enumerable.Range(0, num).ToList();
@@ -49,13 +49,17 @@ namespace GameControls
 
             while (tryNext)
             {
-                plr = Random.Range(0, allgamerNums.Count);
+                //plr = Random.Range(0, allgamerNums.Count-1);
+                plr = Random.Range(0, 8);
                 if (!allplayerNums.Contains(plr))
                 {
                     allplayerNums.Add(plr);
                     tryNext = false;
                 }
             }
+
+            int plrs = allgamerNums.Count + 1;
+            SetAllPlayersNum(plrs);
 
             return plr;
         }
@@ -65,6 +69,8 @@ namespace GameControls
             if (allplayerNums.Count > 1)
             {
                 allplayerNums.RemoveAt(allplayerNums.Count - 1);
+                int plrs = allgamerNums.Count - 1;
+                SetAllPlayersNum(plrs);
             }
         }
 
@@ -73,14 +79,17 @@ namespace GameControls
             int plr = 0;
             bool tryNext = true;
 
+            /*
             if (allplayerNums.Count == allgamerNums.Count)
             {
                 return -1;
             }
+            */
 
             while (tryNext)
             {
-                plr = Random.Range(0, allgamerNums.Count);
+                //plr = Random.Range(0, allgamerNums.Count - 1);
+                plr = Random.Range(0, 8);
                 if (!allplayerNums.Contains(plr))
                 {
                     allplayerNums[plNum] = plr;
@@ -89,6 +98,16 @@ namespace GameControls
             }
 
             return plr;
+        }
+
+        public void TempPrint()
+        {
+            Debug.Log("All gamers: " + allgamerNums.Count.ToString());
+            Debug.Log("Human players nums:");
+            foreach (int pl in allplayerNums)
+            {
+                Debug.Log(pl.ToString());
+            }
         }
 
         public void ActionIteration()

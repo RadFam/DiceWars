@@ -22,7 +22,7 @@ namespace UIControls
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log("Enemy clicked " + myNum.ToString()); 
-            OnClick();
+            //OnClick();
             MenuTwoUIScript mtUIS = FindObjectOfType<MenuTwoUIScript>();
             mtUIS.OnEnemyClicked(myNum);
         }

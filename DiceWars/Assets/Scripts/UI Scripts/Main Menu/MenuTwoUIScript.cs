@@ -30,21 +30,26 @@ namespace UIControls
             allEnemies[0].OnClick();
         }
 
-        public void OnEnemyClicked(int num) // num from 1 to 7
+        public void OnEnemyClicked(int num) // num from 0 to 6
         {
-            foreach (EnemyElementScript ees in allEnemies)
+            if (num + allHumans.Count < 8)
             {
-                if (ees.myNum != num)
+                foreach (EnemyElementScript ees in allEnemies)
                 {
-                    ees.OnDeclick();
+                    if (ees.myNum != num)
+                    {
+                        ees.OnDeclick();
+                    }
                 }
-            }
-            maxEnemies = num;
-            // Еще тут нужно в контроллер передать, сколько теперь у нас будет игроков
-            // .........
+                allEnemies[num].OnClick();
+                maxEnemies = num + 1;
+                // Еще тут нужно в контроллер передать, сколько теперь у нас будет игроков
+                // .........
 
-            CS.playersCount = num + 1;
-            CSoA.SetAllPlayersNum(num);
+                CS.playersCount = num + 1 + allHumans.Count;
+                CSoA.SetAllPlayersNum(num + 1 + allHumans.Count);
+            }
+            
         }
 
         public void OnHumanPlayerIncrease()
@@ -66,8 +71,9 @@ namespace UIControls
         {
             if (allHumans.Count > 1)
             {
+                Debug.Log("Decrease players");
                 CSoA.RemoveHumanPlayer();
-                Destroy(allHumans[allHumans.Count - 1]);
+                Destroy(allHumans[allHumans.Count - 1].gameObject); // Почему-то не удаляет из меню
                 allHumans.RemoveAt(allHumans.Count - 1);
             }
         }

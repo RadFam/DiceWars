@@ -31,7 +31,8 @@ namespace UIControls
 
         public void OnStartGame()
         {
-
+            ControlSequenceOfActions CSoA = FindObjectOfType<ControlSequenceOfActions>();
+            CSoA.TempPrint();
         }
 
         public void OnAppExit()
