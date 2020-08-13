@@ -48,7 +48,7 @@ namespace UIControls
         public void SetPlayer(int playerNum)
         {
             resVol = CommonControl.instance.GetFromReserve(playerNum);
-            Debug.Log("SAVED RESOURCE: " + resVol.ToString());
+            //Debug.Log("SAVED RESOURCE: " + resVol.ToString());
 
             int vl = Mathf.Min(resVol, diceReserve.Count);
 

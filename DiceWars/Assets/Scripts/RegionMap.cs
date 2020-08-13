@@ -712,7 +712,7 @@ namespace RegionStructure
 
         public int GetIndexByCoord(Vector3Int crd)
         {
-            int ans = 0;
+            int ans = -1;
 
             for (int i = 0; i < tileCoords.Length; ++i)
             {

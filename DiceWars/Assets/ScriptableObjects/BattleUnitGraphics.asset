@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c640f4596050bc24cb7655feb5c50ed6, type: 3}
   m_Name: BattleUnitGraphics
   m_EditorClassIdentifier: 
-  unitSprite_class01: []
+  unitSprite_class01:
+  - {fileID: 21300000, guid: e9c3670e248acb44ba1b840788bad4aa, type: 3}
+  - {fileID: 21300000, guid: 6e77f466ef99bad4b91ef16f1f14f4f8, type: 3}
+  - {fileID: 21300000, guid: f1c1a53a54a619c4fb90178bd0f9e2af, type: 3}
+  - {fileID: 21300000, guid: 539c51fddd687c64e91ddfa363b8bf63, type: 3}
+  - {fileID: 21300000, guid: f7fb2b97b31fd4a4a903db6f9c0f0570, type: 3}
+  - {fileID: 21300000, guid: 17f60514a47115d4d9bb82cc0ab4d723, type: 3}
+  - {fileID: 21300000, guid: f383330a224363e4f9df51e648e07e72, type: 3}
+  - {fileID: 21300000, guid: 7d388bd11820d4e4082b0a887351b362, type: 3}
   unitTile_class_01:
   - {fileID: 11400000, guid: 4ac6d57f29079f84785f8fe7ab3946bd, type: 2}
   - {fileID: 11400000, guid: 4a8f0b6059978244584b65f9f86107b4, type: 2}
@@ -52,6 +60,9 @@ MonoBehaviour:
   enemyElements:
   - {fileID: 21300000, guid: a0210da444fd24148ae4a491fd3332f7, type: 3}
   - {fileID: 21300000, guid: ffcf6f16f8a219e45a1e9e57f256a24a, type: 3}
+  playerSequenceElementFrames:
+  - {fileID: 21300000, guid: 123329afce9f1a14bae8f2c3e69230ae, type: 3}
+  - {fileID: 21300000, guid: 2262c85b2fb35e046a43268d9e56128a, type: 3}
   redDice_Reserve_d6:
   - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
   - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
@@ -62,65 +73,65 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
   - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
   blueDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: 8e9fe0ab9fbd7ea49aba4cb8cb4eab74, type: 2}
+  - {fileID: 11400000, guid: b77e2cfabb677eb48aec4144f59b23ff, type: 2}
+  - {fileID: 11400000, guid: cf59889802d329845987e6e883840c79, type: 2}
+  - {fileID: 11400000, guid: 92d71935e60a4a74f91684847e446559, type: 2}
+  - {fileID: 11400000, guid: 8452d4ad5df39b74bbf8dc92c19d1d10, type: 2}
+  - {fileID: 11400000, guid: c089c472096634e408f49631342d5872, type: 2}
+  - {fileID: 11400000, guid: c0fbf0fe67c9c7940bc6d87289ed5f50, type: 2}
+  - {fileID: 11400000, guid: d8df61f27080d7447b045e88d9fb5cbf, type: 2}
   greenDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: b8b5cdbc617299a4882042ed3e1b60f4, type: 2}
+  - {fileID: 11400000, guid: 11712cc2eaaa3b1489f3c8a6fbbaae10, type: 2}
+  - {fileID: 11400000, guid: 41045c6ae83f519438b796b7dace367e, type: 2}
+  - {fileID: 11400000, guid: 400566d56ab796c4d93692dc887fdbf1, type: 2}
+  - {fileID: 11400000, guid: 0460c46dbdea31d4fb5826d684a3b4ed, type: 2}
+  - {fileID: 11400000, guid: 2fb2d417b35dbd94b97c04473336cd54, type: 2}
+  - {fileID: 11400000, guid: f358d5b2a7e598249b7fa1d0abc3a5ca, type: 2}
+  - {fileID: 11400000, guid: 3842596e9c299994da44138491926849, type: 2}
   yellowDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: 8ace6fdc91a895d4fb44695ec2ab7282, type: 2}
+  - {fileID: 11400000, guid: 4bcf5a5cb226c4d419b1fdeaa082b19c, type: 2}
+  - {fileID: 11400000, guid: 6bd8df003a603904a9746c3fd9be20db, type: 2}
+  - {fileID: 11400000, guid: 02431f1371e445246aaed4dd377fba1e, type: 2}
+  - {fileID: 11400000, guid: 03f6c1b07653eae4e8c304ac60a820e1, type: 2}
+  - {fileID: 11400000, guid: da9528e9b264466479d8e217e1b0a2b3, type: 2}
+  - {fileID: 11400000, guid: c67f7fa658de13d48a2c78d218a50421, type: 2}
+  - {fileID: 11400000, guid: 1179f13a03d8ae9408c03e23ff1f2f16, type: 2}
   whiteDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: f512239c6d386d340b43df3447f37931, type: 2}
+  - {fileID: 11400000, guid: 6e7994fa390b654408590b3b625e9f59, type: 2}
+  - {fileID: 11400000, guid: d27f70971f7c05942980b38b95473aa1, type: 2}
+  - {fileID: 11400000, guid: be86bbe0bd5188548ae5336d348b461c, type: 2}
+  - {fileID: 11400000, guid: afde275d7c51198468f7f2e6b5b1ac3f, type: 2}
+  - {fileID: 11400000, guid: d828ee65fb68fe748a87e2e34dc91937, type: 2}
+  - {fileID: 11400000, guid: 6a51c0db8f684a949aba4b041eee3a62, type: 2}
+  - {fileID: 11400000, guid: 6500acad0d63ba14a907964bf3365148, type: 2}
   aquaDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: 119ab66264eaef7468089fa75af444cb, type: 2}
+  - {fileID: 11400000, guid: 40523d778bf052e4d91230c06960daa8, type: 2}
+  - {fileID: 11400000, guid: 38c90a6257978e0438ef61da666427b3, type: 2}
+  - {fileID: 11400000, guid: fc349df547af6e242ad8b099cda4f24b, type: 2}
+  - {fileID: 11400000, guid: 4132dd85adace06449c12c809023e56e, type: 2}
+  - {fileID: 11400000, guid: 2042cbbe7b7db9341aee1ea42afa3a97, type: 2}
+  - {fileID: 11400000, guid: 0559ab413cce12b4ab715e346eae66ea, type: 2}
+  - {fileID: 11400000, guid: 1243b77d2c4f90544984b637a8f8f38a, type: 2}
   orangeDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: fc449a39ab1a0d44f904319639866312, type: 2}
+  - {fileID: 11400000, guid: 79ad310240b0b974ebe43c1d80a0d69d, type: 2}
+  - {fileID: 11400000, guid: b8252d15ce54dc644b1fc6e81a218154, type: 2}
+  - {fileID: 11400000, guid: 15c52a74eaa87db4990666b9b43596a8, type: 2}
+  - {fileID: 11400000, guid: a6b0177c24701fe46ba24faed46fa536, type: 2}
+  - {fileID: 11400000, guid: dd4b4df79b5b6854ab6fe594843366a0, type: 2}
+  - {fileID: 11400000, guid: 0fed2ea6480207441b15fd0624e3789b, type: 2}
+  - {fileID: 11400000, guid: 0e40ae50f9af6204c901916929187e19, type: 2}
   purpleDice_Reserve_d6:
-  - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
-  - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}
-  - {fileID: 11400000, guid: 22b597068d1f19046b4a23cdefbff76c, type: 2}
-  - {fileID: 11400000, guid: cb5bfc0d33d14194e8abb07414afb8a5, type: 2}
-  - {fileID: 11400000, guid: 06d89d7123ebc7d4792d1db6389c6de4, type: 2}
-  - {fileID: 11400000, guid: df16d9a817f0af94f9fbcbbf2e176f1b, type: 2}
-  - {fileID: 11400000, guid: 3ea668ebbbc21d044adf91e7804a8c53, type: 2}
-  - {fileID: 11400000, guid: 2d8296d1b4eef344f9c2d7c1a2936fdc, type: 2}
+  - {fileID: 11400000, guid: 60fbd42929d0e864fb728ec30e1c3ed2, type: 2}
+  - {fileID: 11400000, guid: 02c66400ff5986e439a7983c2c0c51a8, type: 2}
+  - {fileID: 11400000, guid: 14191972dc245624dafe196978cd0994, type: 2}
+  - {fileID: 11400000, guid: e777aa2ae754cdf4e9a6befcda68fe0a, type: 2}
+  - {fileID: 11400000, guid: af4ac86bfe42a2d42a959d29da875174, type: 2}
+  - {fileID: 11400000, guid: 9aff73b8d188ad74aaf00e13bd40f713, type: 2}
+  - {fileID: 11400000, guid: 55a19606182e9044cb860f2524a35111, type: 2}
+  - {fileID: 11400000, guid: bec97f41ebc42d649a1d404bf64ac483, type: 2}

@@ -12,6 +12,7 @@ namespace GameControls
     {
         public enum ArmyTypes { Dice_d6, Dice_d12, Dice_d20 };
 
+        public ControlSequenceOfActions CSoA;
         public Grid tileGrid;
         public List<Tile> allTiles;
         public List<Tile> borderTiles;
@@ -33,6 +34,7 @@ namespace GameControls
         private List<int> darkenedRegions;
 
         private bool canPickOnTiles;
+        private UISequenceScript uiSS;
 
         [SerializeField]
         private int initPlayerNum; // number of player which starts the game
@@ -61,32 +63,62 @@ namespace GameControls
         // Start is called before the first frame update
         void Start()
         {
+            CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
             graphData = CommonControl.instance.allGraphics;
             darkenedRegions = new List<int>();
 
-            cam = Camera.main;
+            //cam = Camera.main;
             position = new Vector3Int(-1, 1, 0);
-            //ShowData();
 
             timer = 0.0f;
             RM = gameObject.GetComponent<RegionMap>();
+            //RM.GenerateRegionsMap();
+            //InitiatePlayerDistribution();
+            //InitiateArmyDistribution();
+        }
+
+        public void ActionsAfterSceneLoad()
+        {
+            // Restore camera
+            cam = Camera.main;
+
+            // Make connections of local and global variables
+            uiSS = FindObjectOfType<UISequenceScript>();
+            tileGrid = FindObjectOfType<Grid>();
+            gameTilemap = tileGrid.transform.GetChild(0).gameObject.GetComponent<Tilemap>();
+            borderTilemaps.Add(tileGrid.transform.GetChild(2).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(3).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(4).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(5).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(6).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(1).gameObject.GetComponent<Tilemap>());
+            diceTilemap = tileGrid.transform.GetChild(7).gameObject.GetComponent<Tilemap>();
+
+            // Clear all tilemaps
+            gameTilemap.ClearAllTiles();
+            diceTilemap.ClearAllTiles();
+            foreach (Tilemap tm in borderTilemaps)
+            {
+                tm.ClearAllTiles();
+            }
+
+            // Generate map
             RM.GenerateRegionsMap();
             InitiatePlayerDistribution();
             InitiateArmyDistribution();
-        }
 
-        public void ShowData()
-        {
-            Tile tile = gameTilemap.GetTile(position) as Tile;
-            TileData td = new TileData();
-            //tile.GetTileData(position, gameTilemap, ref td);
-            //Debug.Log("Tile.sprite: " + tile.sprite.name);
-            //gameTilemap.SetTile(position, redTile);
+            DrawTestRegions();
+            DrawBattleUnits();
+
+            // Start game routine
+            //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+            Debug.Log("Suddenly invoke GoAhead from CS AfterSceneLoad");
+            CSoA.GoAhead();
         }
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonUp(0))
             {
                 if (canPickOnTiles)
                 {
@@ -100,26 +132,36 @@ namespace GameControls
                     int regDBL = RM.GetRegionDBL[ind];
                     int pl = RM.GetPlayerByCoord(tV);
 
-                    Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
+                    //Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
 
                     OnRegionClick();
                 }
             }
 
+            /*
             if (Input.GetMouseButtonDown(1))
             {
                 DrawTestRegions();
                 DrawBattleUnits();
             }
+            */
 
-            if (Input.GetMouseButtonDown(2))
+            
+            if (Input.GetKeyUp("space")) // Скрипт должен срабатывать, когда игровая сцена загрузилась
             {
                 //Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
                 //Vector3Int tV = tileGrid.WorldToCell(mV);
                 //RM.GetAdjacency(tV);
-                ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
-                CSoA.GoAhead();
+                //uiSS = FindObjectOfType<UISequenceScript>();
+
+                //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+                if (canPickOnTiles)
+                {
+                    Debug.Log("Suddenly invoke GoAhead from CS mouse 2");
+                    CSoA.GoAhead();
+                }
             }
+            
         }
 
         // Отрисовка всего игрового поля 
@@ -177,6 +219,8 @@ namespace GameControls
 
         public void InitiatePlayerDistribution()
         {
+            playersCount = CSoA.GetAllGamerNums.Count;
+
             int accReg = RM.GetAccRegions.Count;
             int fullReg = accReg / playersCount;
             int resReg = accReg % playersCount;
@@ -199,7 +243,7 @@ namespace GameControls
                 while (smplCounter < regCounter)
                 {
                     int tmpInd = Random.Range(0, tmpNmbrs.Count);
-                    RM.GetAccRegions[tmpNmbrs[tmpInd]].myPlayer = pl;
+                    RM.GetAccRegions[tmpNmbrs[tmpInd]].myPlayer = CSoA.GetAllGamerNums[pl];
                     smplCounter++;
                     tmpNmbrs.RemoveAt(tmpInd);
                 }
@@ -212,7 +256,7 @@ namespace GameControls
             {
                 int armyCount = initArmy;
 
-                var regInd = RM.GetAccRegions.Select((val, ind) => new { val, ind }).Where(x => x.val.myPlayer == i).Select(x => x.ind).ToList();
+                var regInd = RM.GetAccRegions.Select((val, ind) => new { val, ind }).Where(x => x.val.myPlayer == CSoA.GetAllGamerNums[i]).Select(x => x.ind).ToList();
 
                 foreach (int index in regInd)
                 {
@@ -241,6 +285,9 @@ namespace GameControls
                     }
                 }
             }
+
+            UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
+            uiSS.SetupSequeneceList();
         }
 
         public void DrawBattleUnits()
@@ -261,6 +308,13 @@ namespace GameControls
             Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int tV = tileGrid.WorldToCell(mV);
 
+            // Если это левый тайл (его нет, вышли за экран, прочеее...)
+            //
+            if (RM.GetIndexByCoord(tV) == -1)
+            {
+                return;
+            }
+
             // Первым надо выделить регион, принадлежащий игроку
             if (darkenedRegions.Count == 1)
             {
@@ -272,7 +326,7 @@ namespace GameControls
                 int regg = RM.GetRegion[indd];
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == regg);
 
-                if (RM.GetAccRegions[ind_1].myPlayer == initPlayerNum)
+                if (ind_1 != -1 && RM.GetAccRegions[ind_1].myPlayer == initPlayerNum)
                 {
                     DarkRegion(tV);
                 }
@@ -312,19 +366,24 @@ namespace GameControls
 
             if (successAttack)
             {
-                Debug.Log("Success change distribution");
+                //Debug.Log("Success change distribution");
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
                 int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_2);
+
+                int player_a = RM.GetAccRegions[ind_1].myPlayer;
+                int player_b = RM.GetAccRegions[ind_2].myPlayer;
 
                 int army = RM.GetAccRegions[ind_1].GetArmy(ArmyTypes.Dice_d6);
                 RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
                 RM.GetAccRegions[ind_2].SetArmy(army - 1, ArmyTypes.Dice_d6);
                 RM.GetAccRegions[ind_2].myPlayer = RM.GetAccRegions[ind_1].myPlayer;
 
+                uiSS.UpdatePlayerFiledsVol(player_a);
+                uiSS.UpdatePlayerFiledsVol(player_b);
             }
             else
             {
-                Debug.Log("Unsuccess change distribution");
+                //Debug.Log("Unsuccess change distribution");
                 int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg_1);
                 RM.GetAccRegions[ind_1].DefeatArmy(ArmyTypes.Dice_d6);
             }

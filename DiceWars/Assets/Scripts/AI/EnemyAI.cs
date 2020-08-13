@@ -35,7 +35,7 @@ namespace GameAI
 
         public void EnemyPlayerAttacks(int numPlayer)
         {
-            Debug.Log("Player " + numPlayer.ToString() + " will attack");
+            //Debug.Log("Player " + numPlayer.ToString() + " will attack");
 
             // Get list fo regions that belongs to definite player
             regionAccessPlayerIndicies.Clear();
@@ -194,7 +194,7 @@ namespace GameAI
             }
 
             //myCAGS.StartArmyIncrease(numPlayer);
-
+            Debug.Log("Suddenly invoke GoAhead from EnemyAI");
             myCSoA.GoAhead();
         }
 

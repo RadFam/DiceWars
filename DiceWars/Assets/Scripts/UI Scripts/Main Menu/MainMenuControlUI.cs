@@ -33,11 +33,14 @@ namespace UIControls
         {
             ControlSequenceOfActions CSoA = FindObjectOfType<ControlSequenceOfActions>();
             CSoA.TempPrint();
+
+            SceneLoaderScript SLS = FindObjectOfType<SceneLoaderScript>();
+            SLS.LoadGameScene();
         }
 
         public void OnAppExit()
         {
-
+            Application.Quit();
         }
     }
 }

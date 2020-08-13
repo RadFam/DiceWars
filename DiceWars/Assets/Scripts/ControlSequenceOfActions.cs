@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using GameAI;
+using UIControls;
 
 namespace GameControls
 {
@@ -10,18 +11,29 @@ namespace GameControls
     {
         // Start is called before the first frame update
         private List<int> allgamerNums; // ordered sequence of all gamer numbers
+        //private List<int> allgamerNums2; // ordered sequence of all gamer real numbers
         private List<int> allplayerNums; // sequence of player numbers
+
+        private List<int> allNums;
 
         private ControlScript myCS;
         private ControlArmyGrowthScript myCAGS;
         private EnemyAI myAI;
-        private int currPlay;
+        private int currPlay; // Number of current player (AI and human)
+
+        public List<int> GetAllGamerNums
+        {
+            get { return allgamerNums; }
+        }
 
         void Start()
         {
+            allNums = Enumerable.Range(0, 8).ToList();
+
             // Temporary
-            // .....let the list of allgamerNums is the range of 0 to 7 (!!!!!!!!)
+            // .....let the list of allgamerNums is the range of 0 to 7
             allgamerNums = Enumerable.Range(0, 2).ToList(); // List of all players
+            //allgamerNums2 = Enumerable.Range(0, 2).ToList(); // List of all player`s numbers (it is important)
             allplayerNums = Enumerable.Range(1, 1).ToList(); // List of human players
 
             myCS = gameObject.GetComponent<ControlScript>();
@@ -37,7 +49,22 @@ namespace GameControls
             if (num <= 8)
             {
                 allgamerNums.Clear();
-                allgamerNums = Enumerable.Range(0, num).ToList();
+                //allgamerNums = Enumerable.Range(0, num).ToList();
+
+                foreach (int nm in allplayerNums)
+                {
+                    allgamerNums.Add(nm);
+                }
+
+                allgamerNums.Sort();
+                List<int> exNum = allNums.Except(allgamerNums).ToList();
+
+                for (int i = 0; i < num - allplayerNums.Count; ++i)
+                {
+                    allgamerNums.Add(exNum[i]);
+                }
+
+                allgamerNums.Sort();
             }
         }
 
@@ -97,12 +124,19 @@ namespace GameControls
                 }
             }
 
+            int plrs = allgamerNums.Count;
+            SetAllPlayersNum(plrs);
+
             return plr;
         }
 
         public void TempPrint()
         {
             Debug.Log("All gamers: " + allgamerNums.Count.ToString());
+            foreach (int pl in allgamerNums)
+            {
+                Debug.Log(pl.ToString());
+            }
             Debug.Log("Human players nums:");
             foreach (int pl in allplayerNums)
             {
@@ -112,13 +146,16 @@ namespace GameControls
 
         public void ActionIteration()
         {
-            int terrNum = 0;
+            int terrNum = 0; // Number of territories that occupied current player (currPlayer)
             terrNum = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
-                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == currPlay)
+                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == allgamerNums[currPlay])
                     .ToList().Count;
 
             if (terrNum > 0)
             {
+                UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
+                uiSS.SetActiveElement(allgamerNums[currPlay]);
+
                 myCS.CanTilePicking = false;
                 int ind = allplayerNums.FindIndex(x => x == allgamerNums[currPlay]);
                 if (ind == -1)
@@ -137,6 +174,7 @@ namespace GameControls
             }
             else
             {
+                Debug.Log("Suddenly invoke GoAhead from CSoA");
                 GoAhead();
             }
 
@@ -144,7 +182,8 @@ namespace GameControls
         }
 
         public void GoAhead()
-        {  
+        {
+            myCS.CanTilePicking = false;
             StartCoroutine(BetweenPause()); // Maybe here we can invoke drawing of dice stashing
         }
 
@@ -155,21 +194,24 @@ namespace GameControls
             if (currPlay != -1)
             {
                 terrNum = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
-                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == currPlay)
+                    .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == allgamerNums[currPlay])
                     .ToList().Count;
             }
 
             if (currPlay != -1 && terrNum > 0)
             {
                 // Вставить анимацию увеличения числа кубиков
-                yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(currPlay));
+                //yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(currPlay)); //(????)
+                yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(allgamerNums[currPlay]));
             }
             currPlay += 1;
+            Debug.Log("currPlay: " + currPlay.ToString() + "  allgamerNums.Count: " + allgamerNums.Count.ToString());
             currPlay = currPlay % allgamerNums.Count;
+            Debug.Log("Real currPlay: " + currPlay.ToString());
 
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
-                        
+            Debug.Log("End of Coroutine");
         }
 
     }

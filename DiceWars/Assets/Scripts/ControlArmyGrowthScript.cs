@@ -20,11 +20,16 @@ namespace GameControls
             myCS = gameObject.GetComponent<ControlScript>();
             playerRegionNumbers = new List<int>();
             canAddList = new List<bool>();
-            gameUI = FindObjectOfType<GameUIViewController>();
+            gameUI = null;
         }
 
         public void StartArmyIncrease(int playerNum)
         {
+            if (!gameUI)
+            {
+                gameUI = FindObjectOfType<GameUIViewController>();
+            }
+
             currPlayer = playerNum;
             canAddList.Clear();
             playerRegionNumbers.Clear();
@@ -42,6 +47,11 @@ namespace GameControls
 
         public IEnumerator ConsequenceArmyIncrease(int playerNum)
         {
+            if (!gameUI)
+            {
+                gameUI = FindObjectOfType<GameUIViewController>();
+            }
+
             currPlayer = playerNum;
             canAddList.Clear();
             playerRegionNumbers.Clear();
@@ -56,7 +66,7 @@ namespace GameControls
 
             // Get number of dices, that we need to add to player
             int dices = myCS.GetRM.GetPlayerMaxConnectedTerritorySize(currPlayer);
-            Debug.Log("MAX added dices value is: " + dices.ToString());
+            //Debug.Log("MAX added dices value is: " + dices.ToString());
 
             // Set this dices to the reserve
             CommonControl.instance.SetToReserve(dices, currPlayer);
@@ -99,7 +109,7 @@ namespace GameControls
             yield return new WaitForSeconds(0.3f);
             uiRfs.gameObject.SetActive(false);
 
-            Debug.Log("Rest of dices: " + CommonControl.instance.GetFromReserve(currPlayer).ToString());
+            //Debug.Log("Rest of dices: " + CommonControl.instance.GetFromReserve(currPlayer).ToString());
 
             //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
             //CSoA.GoAhead();

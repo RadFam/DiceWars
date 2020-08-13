@@ -15,6 +15,7 @@ public class BattleUnitGraphics : ScriptableObject
 
     public List<Sprite> battleSwords;
     public List<Sprite> enemyElements;
+    public List<Sprite> playerSequenceElementFrames;
 
     public List<Tile> redDice_Reserve_d6;
     public List<Tile> blueDice_Reserve_d6;
