@@ -2,16 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UIControls;
 
 
 namespace GameControls
 {
     public class SceneLoaderScript : MonoBehaviour
     {
+        private static SceneLoaderScript instance;
         // Maybe this is not nessesary
         void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
+
+            if (instance == null)
+            {
+                instance = this;
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         // Start is called before the first frame update
@@ -39,6 +50,11 @@ namespace GameControls
             {
                 yield return null;
             }
+
+            MainMenuControlUI mmCui = FindObjectOfType<MainMenuControlUI>();
+            mmCui.OnMenuOneOpen();
+            ControlScript cs = FindObjectOfType<ControlScript>();
+            cs.CanTilePicking = false;
         }
 
         IEnumerator LoadGameSceneCor()

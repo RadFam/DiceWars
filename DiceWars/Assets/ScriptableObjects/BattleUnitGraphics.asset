@@ -63,6 +63,10 @@ MonoBehaviour:
   playerSequenceElementFrames:
   - {fileID: 21300000, guid: 123329afce9f1a14bae8f2c3e69230ae, type: 3}
   - {fileID: 21300000, guid: 2262c85b2fb35e046a43268d9e56128a, type: 3}
+  commonMenuPanels:
+  - {fileID: 21300000, guid: eb715fac7dc697949a170bd23427b63a, type: 3}
+  - {fileID: 21300000, guid: 90132fed14e16e24ebab0d98c48876d9, type: 3}
+  - {fileID: 21300000, guid: dbffab62c60405c4da9b4b8ec76416aa, type: 3}
   redDice_Reserve_d6:
   - {fileID: 11400000, guid: 49e6716ced5048d4fbf8e0e0274326d9, type: 2}
   - {fileID: 11400000, guid: 82d35fb26502a454db882490f242f19f, type: 2}

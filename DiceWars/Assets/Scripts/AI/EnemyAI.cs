@@ -23,14 +23,19 @@ namespace GameAI
         private List<float> regionEnemiesArmiesSuccess;
 
         // Start is called before the first frame update
+        private void Awake()
+        {
+            regionAccessPlayerIndicies = new List<int>();
+            regionEnemiesIndicies = new List<int>();
+            regionEnemiesArmiesSuccess = new List<float>();
+        }
+
         void Start()
         {
             myCS = gameObject.GetComponent<ControlScript>();
             myCSoA = gameObject.GetComponent<ControlSequenceOfActions>();
             myCAGS = gameObject.GetComponent<ControlArmyGrowthScript>();
-            regionAccessPlayerIndicies = new List<int>();
-            regionEnemiesIndicies = new List<int>();
-            regionEnemiesArmiesSuccess = new List<float>();
+            
         }
 
         public void EnemyPlayerAttacks(int numPlayer)
@@ -194,10 +199,23 @@ namespace GameAI
             }
 
             //myCAGS.StartArmyIncrease(numPlayer);
-            Debug.Log("Suddenly invoke GoAhead from EnemyAI");
+            //Debug.Log("Suddenly invoke GoAhead from EnemyAI");
             myCSoA.GoAhead();
         }
 
+        public void EmergencyStop()
+        {
+            cannotFurtherAttack = true;
+            //StopCoroutine(FullAttackCoroutine());
+        }
+
+        public void RestoreBeforeReload()
+        {
+            cannotFurtherAttack = true;
+            regionAccessPlayerIndicies.Clear();
+            regionEnemiesIndicies.Clear();
+            regionEnemiesArmiesSuccess.Clear();
+        }
 
         /*
         IEnumerator PauseCoroutine(float time)

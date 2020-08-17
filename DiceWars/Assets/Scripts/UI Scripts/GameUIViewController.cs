@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using GameControls;
 
 namespace UIControls
 {
@@ -14,6 +15,8 @@ namespace UIControls
         UIBattleAIFieldScript uiAIBfs;
         [SerializeField]
         UIResourceFieldScript uiRfs;
+        [SerializeField]
+        UIMessageScript uiMs;
 
         public void ShowClashAttack()
         {
@@ -31,6 +34,28 @@ namespace UIControls
         {
             uiRfs.gameObject.SetActive(true);            
             return uiRfs;
+        }
+
+        public UIMessageScript ShowMessageFrame()
+        {
+            uiMs.gameObject.SetActive(true);
+            return uiMs;
+        }
+
+        public void OnRestartGame()
+        {
+            uiMs.gameObject.SetActive(false);
+            ControlScript CS = FindObjectOfType<ControlScript>();
+            CS.RestoreInitialGame();
+        }
+
+        public void OnMenuExit()
+        {
+            uiMs.gameObject.SetActive(false);
+            ControlScript CS = FindObjectOfType<ControlScript>();
+            CS.RestoreBeforeReload();
+            SceneLoaderScript SLS = FindObjectOfType<SceneLoaderScript>();
+            SLS.LoadMenuScene();
         }
     }
 }

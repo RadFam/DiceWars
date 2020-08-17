@@ -21,13 +21,27 @@ namespace GameControls
         private EnemyAI myAI;
         private int currPlay; // Number of current player (AI and human)
 
+        private bool nextProceed = true;
+
         public List<int> GetAllGamerNums
         {
             get { return allgamerNums; }
         }
 
+        public List<int> GetAllPlayerNums
+        {
+            get { return allplayerNums; }
+        }
+
         void Start()
         {
+            allNums = new List<int>();
+            allplayerNums = new List<int>();
+            allgamerNums = new List<int>();
+
+            RestoreBeforeReload();
+
+            /*
             allNums = Enumerable.Range(0, 8).ToList();
 
             // Temporary
@@ -42,6 +56,7 @@ namespace GameControls
             myCS.CurrPlayerNum = allplayerNums[0];
 
             currPlay = -1;
+            */
         }
 
         public void SetAllPlayersNum(int num)
@@ -157,11 +172,13 @@ namespace GameControls
                 uiSS.SetActiveElement(allgamerNums[currPlay]);
 
                 myCS.CanTilePicking = false;
+                myCS.humanMove = false;
                 int ind = allplayerNums.FindIndex(x => x == allgamerNums[currPlay]);
                 if (ind == -1)
                 {
                     // Block in ControlScript ability to click on tilemap
                     myCS.CanTilePicking = false;
+                    myCS.humanMove = false;
                     // Invoke EnemyAI
                     myAI.EnemyPlayerAttacks(allgamerNums[currPlay]);
                 }
@@ -169,6 +186,7 @@ namespace GameControls
                 {
                     // Deblock in ControlScript ability to click on tilemap
                     myCS.CanTilePicking = true;
+                    myCS.humanMove = true;
                     myCS.CurrPlayerNum = allplayerNums[ind];
                 }
             }
@@ -184,7 +202,10 @@ namespace GameControls
         public void GoAhead()
         {
             myCS.CanTilePicking = false;
-            StartCoroutine(BetweenPause()); // Maybe here we can invoke drawing of dice stashing
+            if (nextProceed)
+            {
+                StartCoroutine(BetweenPause()); // Maybe here we can invoke drawing of dice stashing
+            }
         }
 
         IEnumerator BetweenPause()
@@ -212,6 +233,50 @@ namespace GameControls
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
             Debug.Log("End of Coroutine");
+        }
+
+        public void EmergencyStop()
+        {
+            nextProceed = false;
+            myCS.CanTilePicking = false;
+            myAI.EmergencyStop();
+        }
+
+        public void RestartSequence()
+        {
+            nextProceed = true;
+            myCS.CurrPlayerNum = allplayerNums[0];
+            currPlay = -1;
+            myAI.RestoreBeforeReload();
+        }
+
+        public void RestoreBeforeReload()
+        {
+            nextProceed = true;
+
+            allNums.Clear();
+            allgamerNums.Clear();
+            allplayerNums.Clear();
+            myCS = null;
+            myAI = null;
+            myCAGS = null;
+
+            allNums = Enumerable.Range(0, 8).ToList();
+
+            // Temporary
+            // .....let the list of allgamerNums is the range of 0 to 7
+            allgamerNums = Enumerable.Range(0, 2).ToList(); // List of all players
+            //allgamerNums2 = Enumerable.Range(0, 2).ToList(); // List of all player`s numbers (it is important)
+            allplayerNums = Enumerable.Range(1, 1).ToList(); // List of human players
+
+            myCS = gameObject.GetComponent<ControlScript>();
+            myAI = gameObject.GetComponent<EnemyAI>();
+            myCAGS = gameObject.GetComponent<ControlArmyGrowthScript>();
+            myCS.CurrPlayerNum = allplayerNums[0];
+
+            myAI.RestoreBeforeReload();
+
+            currPlay = -1;
         }
 
     }

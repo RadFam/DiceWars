@@ -133,9 +133,6 @@ namespace GameControls
                 if (canAddList[index] == true)
                 {
                     // Add dice to the region playerRegionNumbers[index]
-                    // Кость уже добавляется (!)
-                    myCS.GetRM.GetAccRegions[playerRegionNumbers[index]].AddArmy(1, ControlScript.ArmyTypes.Dice_d6);
-
                     // Check if fullfiled
                     if (myCS.GetRM.GetAccRegions[playerRegionNumbers[index]].CheckArmyFullfilled(ControlScript.ArmyTypes.Dice_d6))
                     {
@@ -144,6 +141,8 @@ namespace GameControls
                     }
                     else
                     {
+                        // Кость уже добавляется (!)
+                        myCS.GetRM.GetAccRegions[playerRegionNumbers[index]].AddArmy(1, ControlScript.ArmyTypes.Dice_d6);
                         //regNum = playerRegionNumbers[index];
                         regNum = myCS.GetRM.GetAccRegions[playerRegionNumbers[index]].RegNum;
                         break;

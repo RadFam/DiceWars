@@ -26,11 +26,14 @@ namespace GameControls
         public int playersCount; // Number of all players
         public int initArmy; // Initial value of dices for each player
 
+        public bool humanMove;
+
         private Vector3Int position;
         private Camera cam;
 
         private float timer;
         private RegionMap RM;
+        private RegionMap RM_D;
         private List<int> darkenedRegions;
 
         private bool canPickOnTiles;
@@ -72,6 +75,8 @@ namespace GameControls
 
             timer = 0.0f;
             RM = gameObject.GetComponent<RegionMap>();
+
+            humanMove = false;
             //RM.GenerateRegionsMap();
             //InitiatePlayerDistribution();
             //InitiateArmyDistribution();
@@ -84,7 +89,7 @@ namespace GameControls
 
             // Make connections of local and global variables
             uiSS = FindObjectOfType<UISequenceScript>();
-            tileGrid = FindObjectOfType<Grid>();
+            tileGrid = FindObjectOfType<Grid>(); Debug.Log("tileGrid: " + tileGrid + "   Region Map: " + RM);
             gameTilemap = tileGrid.transform.GetChild(0).gameObject.GetComponent<Tilemap>();
             borderTilemaps.Add(tileGrid.transform.GetChild(2).gameObject.GetComponent<Tilemap>());
             borderTilemaps.Add(tileGrid.transform.GetChild(3).gameObject.GetComponent<Tilemap>());
@@ -93,6 +98,8 @@ namespace GameControls
             borderTilemaps.Add(tileGrid.transform.GetChild(6).gameObject.GetComponent<Tilemap>());
             borderTilemaps.Add(tileGrid.transform.GetChild(1).gameObject.GetComponent<Tilemap>());
             diceTilemap = tileGrid.transform.GetChild(7).gameObject.GetComponent<Tilemap>();
+
+            canPickOnTiles = false;
 
             // Clear all tilemaps
             gameTilemap.ClearAllTiles();
@@ -112,7 +119,7 @@ namespace GameControls
 
             // Start game routine
             //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
-            Debug.Log("Suddenly invoke GoAhead from CS AfterSceneLoad");
+            //Debug.Log("Suddenly invoke GoAhead from CS AfterSceneLoad");
             CSoA.GoAhead();
         }
 
@@ -125,39 +132,21 @@ namespace GameControls
                     Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
                     Vector3Int tV = tileGrid.WorldToCell(mV);
 
-                    //gameTilemap.SetTile(tV, redTile);
-
                     int ind = RM.GetIndexByCoord(tV);
                     int reg = RM.GetRegion[ind];
                     int regDBL = RM.GetRegionDBL[ind];
                     int pl = RM.GetPlayerByCoord(tV);
-
-                    //Debug.Log("Cell coord: " + tV + "   region num: " + reg.ToString() + "   region INITnum: " + regDBL.ToString() + "  PLAYER: " + pl.ToString());
-
+                    
                     OnRegionClick();
                 }
             }
 
-            /*
-            if (Input.GetMouseButtonDown(1))
-            {
-                DrawTestRegions();
-                DrawBattleUnits();
-            }
-            */
-
             
             if (Input.GetKeyUp("space")) // Скрипт должен срабатывать, когда игровая сцена загрузилась
             {
-                //Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
-                //Vector3Int tV = tileGrid.WorldToCell(mV);
-                //RM.GetAdjacency(tV);
-                //uiSS = FindObjectOfType<UISequenceScript>();
-
-                //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
                 if (canPickOnTiles)
                 {
-                    Debug.Log("Suddenly invoke GoAhead from CS mouse 2");
+                    //Debug.Log("Suddenly invoke GoAhead from CS mouse 2");
                     CSoA.GoAhead();
                 }
             }
@@ -190,10 +179,6 @@ namespace GameControls
                     hexColor = new Color(0.0f, 0.0f, 1.0f);
                 }
 
-                //gameTilemap.SetTile(regCoord[i], allTiles[6]);
-                //gameTilemap.SetTileFlags(regCoord[i], TileFlags.None);
-                //gameTilemap.SetColor(regCoord[i], hexColor);
-                //gameTilemap.RefreshTile(regCoord[i]);
             }
 
             int[] border = new int[6];
@@ -285,6 +270,8 @@ namespace GameControls
                     }
                 }
             }
+
+            RM_D = RM;
 
             UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
             uiSS.SetupSequeneceList();
@@ -406,48 +393,52 @@ namespace GameControls
             int ind = RM.GetIndexByCoord(crd);
             int reg = RM.GetRegion[ind];
 
-            // Проверяем, единственный ли этот регион в списке
-            if (darkenedRegions.Count == 0)
+            if (reg != -1)
             {
-                darkenedRegions.Add(reg);
-                SubdrawRegion(reg, true);
-            }
-
-            if (darkenedRegions.Count == 1)
-            {
-                int firstReg = darkenedRegions[0];
-
-                // Проверяем, соседние ли это враждебные территории
-
-                // Не соседние
-                if (RM.GetAdjMatrix[firstReg, reg] == 0)
+                // Проверяем, единственный ли этот регион в списке
+                if (darkenedRegions.Count == 0)
                 {
-                    SubdrawRegion(firstReg, false);
-                    darkenedRegions.Clear();
                     darkenedRegions.Add(reg);
                     SubdrawRegion(reg, true);
                 }
 
-                if (RM.GetAdjMatrix[firstReg, reg] == 1)
+                if (darkenedRegions.Count == 1)
                 {
-                    int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == firstReg);
-                    int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg);
+                    int firstReg = darkenedRegions[0];
 
-                    // Один и тот же игрок
-                    if (RM.GetAccRegions[ind_1].myPlayer == RM.GetAccRegions[ind_2].myPlayer)
+                    // Проверяем, соседние ли это враждебные территории
+
+                    // Не соседние
+                    if (RM.GetAdjMatrix[firstReg, reg] == 0)
                     {
                         SubdrawRegion(firstReg, false);
                         darkenedRegions.Clear();
                         darkenedRegions.Add(reg);
                         SubdrawRegion(reg, true);
                     }
-                    else
+
+                    if (RM.GetAdjMatrix[firstReg, reg] == 1)
                     {
-                        darkenedRegions.Add(reg);
-                        SubdrawRegion(reg, true);
+                        int ind_1 = RM.GetAccRegions.FindIndex(x => x.RegNum == firstReg);
+                        int ind_2 = RM.GetAccRegions.FindIndex(x => x.RegNum == reg);
+
+                        // Один и тот же игрок
+                        if (RM.GetAccRegions[ind_1].myPlayer == RM.GetAccRegions[ind_2].myPlayer)
+                        {
+                            SubdrawRegion(firstReg, false);
+                            darkenedRegions.Clear();
+                            darkenedRegions.Add(reg);
+                            SubdrawRegion(reg, true);
+                        }
+                        else
+                        {
+                            darkenedRegions.Add(reg);
+                            SubdrawRegion(reg, true);
+                        }
                     }
                 }
             }
+ 
         }
 
         public void UndarkRegions()
@@ -457,6 +448,32 @@ namespace GameControls
                 SubdrawRegion(nm, false);
             }
             darkenedRegions.Clear();
+
+            // Check the result of battle
+            if (humanMove)
+            {
+                if (CheckWinCase(initPlayerNum)) // Win case
+                {
+                    canPickOnTiles = false;
+                    GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+                    UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
+                    uiMS.SetStatus(true, initPlayerNum);
+                }
+            }
+            else
+            {
+                if (CheckLooseCase()) // Loose case
+                {
+                    // Stop AI
+                    // ....
+                    CSoA.EmergencyStop();
+                    
+
+                    GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+                    UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
+                    uiMS.SetStatus(false);
+                }
+            }
         }
 
         public void SubdrawRegion(int regNum, bool darken)
@@ -521,6 +538,65 @@ namespace GameControls
                         break;
                 }
             }
+        }
+
+        public bool CheckWinCase(int playerNum)
+        {
+            int playerTerr = Enumerable.Range(0, RM.GetAccRegions.Count)
+                    .Where(x => RM.GetAccRegions[x].myPlayer == playerNum)
+                    .ToList().Count;
+            int allTerr = RM.GetAccRegions.Count;
+            if (playerTerr == allTerr)
+            {
+                canPickOnTiles = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CheckLooseCase()
+        {
+            List<int> humans = CSoA.GetAllPlayerNums;
+            int summ = 0;
+            int playerTerr = 0;
+            foreach (int person in humans)
+            {
+                playerTerr = Enumerable.Range(0, RM.GetAccRegions.Count)
+                    .Where(x => RM.GetAccRegions[x].myPlayer == person)
+                    .ToList().Count;
+                summ += playerTerr;
+            }
+            if (summ == 0)
+            {
+                canPickOnTiles = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void RestoreInitialGame()
+        {
+            RM = RM_D;
+
+            CSoA.RestartSequence();
+
+            UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
+            uiSS.SetupSequeneceList();
+
+            DrawTestRegions();
+            DrawBattleUnits();
+
+            CSoA.GoAhead();
+        }
+
+        public void RestoreBeforeReload()
+        {
+            RM = null;
+            RM_D = null;
+
+            CSoA.RestoreBeforeReload();
         }
     }
 }
