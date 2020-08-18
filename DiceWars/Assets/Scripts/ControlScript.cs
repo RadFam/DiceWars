@@ -66,17 +66,20 @@ namespace GameControls
         // Start is called before the first frame update
         void Start()
         {
-            CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
-            graphData = CommonControl.instance.allGraphics;
-            darkenedRegions = new List<int>();
+            //CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+            //graphData = CommonControl.instance.allGraphics;
+            //borderTilemaps = new List<Tilemap>();
+            //darkenedRegions = new List<int>();
 
             //cam = Camera.main;
-            position = new Vector3Int(-1, 1, 0);
 
-            timer = 0.0f;
-            RM = gameObject.GetComponent<RegionMap>();
+            //position = new Vector3Int(-1, 1, 0);
 
-            humanMove = false;
+            //timer = 0.0f;
+            //RM = gameObject.GetComponent<RegionMap>();
+
+            //humanMove = false;
+
             //RM.GenerateRegionsMap();
             //InitiatePlayerDistribution();
             //InitiateArmyDistribution();
@@ -84,6 +87,21 @@ namespace GameControls
 
         public void ActionsAfterSceneLoad()
         {
+            CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
+            graphData = CommonControl.instance.allGraphics;
+            borderTilemaps = new List<Tilemap>();
+            darkenedRegions = new List<int>();
+
+            position = new Vector3Int(-1, 1, 0);
+
+            timer = 0.0f;
+
+            RM = null;
+            RM = gameObject.GetComponent<RegionMap>();
+            RM.CreateNewZerofication();
+
+            humanMove = false;
+
             // Restore camera
             cam = Camera.main;
 
@@ -130,6 +148,7 @@ namespace GameControls
                 if (canPickOnTiles)
                 {
                     Vector3 mV = cam.ScreenToWorldPoint(Input.mousePosition);
+                    Debug.Log("mV: " + mV + "  tileGrid: " + tileGrid + "  RM: " + RM);
                     Vector3Int tV = tileGrid.WorldToCell(mV);
 
                     int ind = RM.GetIndexByCoord(tV);
@@ -593,8 +612,8 @@ namespace GameControls
 
         public void RestoreBeforeReload()
         {
-            RM = null;
-            RM_D = null;
+            //RM = null;
+            //RM_D = null;
 
             CSoA.RestoreBeforeReload();
         }

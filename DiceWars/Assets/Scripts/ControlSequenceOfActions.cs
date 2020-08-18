@@ -226,13 +226,13 @@ namespace GameControls
                 yield return StartCoroutine(myCAGS.ConsequenceArmyIncrease(allgamerNums[currPlay]));
             }
             currPlay += 1;
-            Debug.Log("currPlay: " + currPlay.ToString() + "  allgamerNums.Count: " + allgamerNums.Count.ToString());
+            //Debug.Log("currPlay: " + currPlay.ToString() + "  allgamerNums.Count: " + allgamerNums.Count.ToString());
             currPlay = currPlay % allgamerNums.Count;
-            Debug.Log("Real currPlay: " + currPlay.ToString());
+            //Debug.Log("Real currPlay: " + currPlay.ToString());
 
             yield return new WaitForSeconds(0.5f);
             ActionIteration();
-            Debug.Log("End of Coroutine");
+            //Debug.Log("End of Coroutine");
         }
 
         public void EmergencyStop()

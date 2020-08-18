@@ -51,6 +51,8 @@ namespace GameControls
                 yield return null;
             }
 
+            Debug.Log("Menu Scene Loaded");
+
             MainMenuControlUI mmCui = FindObjectOfType<MainMenuControlUI>();
             mmCui.OnMenuOneOpen();
             ControlScript cs = FindObjectOfType<ControlScript>();

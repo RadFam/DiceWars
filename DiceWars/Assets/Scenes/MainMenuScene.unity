@@ -1893,7 +1893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deltaXTile: 24
   deltaYTile: 19
-  regionsNum: 30
+  regionsNum: 15
   rarePercent: 30
 --- !u!114 &1142496629
 MonoBehaviour:

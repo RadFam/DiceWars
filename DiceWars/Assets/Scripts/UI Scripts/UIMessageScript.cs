@@ -21,7 +21,7 @@ namespace UIControls
 
         public void SetStatus(bool isWin, int player = 0)
         {
-            Debug.Log("My image is: " + myImage);
+            //Debug.Log("My image is: " + myImage);
 
             if (isWin)
             {

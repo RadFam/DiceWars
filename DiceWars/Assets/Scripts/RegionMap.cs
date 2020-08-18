@@ -65,6 +65,34 @@ namespace RegionStructure
         // Start is called before the first frame update
         void Awake()
         {
+            /*
+            allRegions = new List<Region>();
+            accessRegions = new List<Region>();
+            visited = new bool[regionsNum];
+            visitedWithNum = new List<int>();
+            regionAdjacency = new int[regionsNum, regionsNum];
+            regionAdjacencyDBL = new int[regionsNum, regionsNum];
+            regionAssign = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
+            regionAssignDBL = new int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
+            growthFront = new List<int>();
+            tileCoords = new Vector3Int[(2 * deltaYTile + 1) * (2 * deltaXTile + 1)];
+            for (int i = 0; i < (2 * deltaYTile + 1) * (2 * deltaXTile + 1); ++i)
+            {
+                regionAssign[i] = -1;
+                growthFront.Add(0);
+                int x = i % (2 * deltaXTile + 1) - deltaXTile;
+                int y = (i - (i % (2 * deltaXTile + 1))) / (2 * deltaXTile + 1) - deltaYTile;
+                tileCoords[i] = new Vector3Int(x, y, 0);
+            }
+            for (int i = 0; i < regionsNum; ++i)
+            {
+                visitedWithNum.Add(0);
+            }
+            */
+        }
+
+        public void CreateNewZerofication()
+        {
             allRegions = new List<Region>();
             accessRegions = new List<Region>();
             visited = new bool[regionsNum];
