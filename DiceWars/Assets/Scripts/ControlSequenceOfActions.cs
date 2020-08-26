@@ -10,10 +10,12 @@ namespace GameControls
     public class ControlSequenceOfActions : MonoBehaviour
     {
         // Start is called before the first frame update
+        [SerializeField]
         private List<int> allgamerNums; // ordered sequence of all gamer numbers
         //private List<int> allgamerNums2; // ordered sequence of all gamer real numbers
+        [SerializeField]
         private List<int> allplayerNums; // sequence of player numbers
-
+        [SerializeField]
         private List<int> allNums;
 
         private ControlScript myCS;

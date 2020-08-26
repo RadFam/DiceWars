@@ -53,6 +53,7 @@ namespace GameControls
         public BattleUnitGraphics allGraphics;
         public ClashStack battleStack;
 
+        [SerializeField]
         List<int> playersReserve;
 
         // Start is called before the first frame update
@@ -82,6 +83,22 @@ namespace GameControls
         public int GetFromReserve(int playerNum)
         {
             return playersReserve[playerNum];
+        }
+
+        public void ZerofyReserve(int playerNum)
+        {
+            if (playerNum < 8)
+            {
+                playersReserve[playerNum] = 0;
+            }
+        }
+
+        public void ZerofyAllReserve()
+        {
+            for (int i = 0; i < 8; ++i)
+            {
+                playersReserve[i] = 0;
+            }
         }
 
         public void ResertStack()

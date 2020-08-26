@@ -1855,6 +1855,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4e1ab5f8e3fdb4cb12bd6b79118a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allgamerNums: 
+  allplayerNums: 
+  allNums: 
 --- !u!114 &1142496626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1867,6 +1870,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a7e2a09c19ff444eb8b4174c8308cbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myCS: {fileID: 0}
+  myCSoA: {fileID: 0}
+  myCAGS: {fileID: 0}
+  regionAccessPlayerIndicies: 
+  regionEnemiesIndicies: 
+  regionEnemiesArmiesSuccess: []
 --- !u!114 &1142496627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1893,7 +1902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deltaXTile: 24
   deltaYTile: 19
-  regionsNum: 15
+  regionsNum: 20
   rarePercent: 30
 --- !u!114 &1142496629
 MonoBehaviour:
@@ -1931,6 +1940,7 @@ MonoBehaviour:
   playersCount: 8
   initArmy: 10
   humanMove: 0
+  RM_D: {fileID: 0}
   initPlayerNum: 0
 --- !u!114 &1142496630
 MonoBehaviour:
@@ -1945,6 +1955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allGraphics: {fileID: 11400000, guid: 600f0b4f803f26449b1c8eb72844c3b9, type: 2}
+  playersReserve: 
 --- !u!114 &1142496631
 MonoBehaviour:
   m_ObjectHideFlags: 0

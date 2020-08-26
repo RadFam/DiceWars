@@ -10,16 +10,22 @@ namespace GameAI
 {
     public class EnemyAI : MonoBehaviour
     {
+        [SerializeField]
         private ControlScript myCS;
+        [SerializeField]
         private ControlSequenceOfActions myCSoA;
+        [SerializeField]
         private ControlArmyGrowthScript myCAGS;
         private int stageCntr;
         private int attackerReg;
         private int attackReg;
 
         private bool cannotFurtherAttack;
+        [SerializeField]
         private List<int> regionAccessPlayerIndicies;
+        [SerializeField]
         private List<int> regionEnemiesIndicies;
+        [SerializeField]
         private List<float> regionEnemiesArmiesSuccess;
 
         // Start is called before the first frame update
@@ -70,48 +76,6 @@ namespace GameAI
 
             return worthAttack;
         }
-        
-        /*
-        public void AttackRegion(int regionNumA, int regionNumD)
-        {
-            if (stageCntr == 0)
-            {
-                // Darken attack territory
-                Debug.Log("Region " + regionNumA.ToString() + " attacks region " + regionNumD.ToString());
-                myCS.DarkRegion(regionNumA);
-                StartCoroutine(PauseCoroutine(0.4f));
-            }
-            
-            if (stageCntr == 1)
-            {
-                // Darken defend territory
-                myCS.DarkRegion(regionNumD);
-                StartCoroutine(PauseCoroutine(0.4f));
-            }
-            
-            if (stageCntr == 2)
-            {
-                // Undark both territories
-                myCS.UndarkRegions();
-                stageCntr = 0;
-            }   
-        }
-        */
-
-        /*
-        IEnumerator AttackCoroutine(int regionNumA, int regionNumD, float time)
-        {
-            Debug.Log("Region " + regionNumA.ToString() + " attacks region " + regionNumD.ToString());
-            myCS.DarkRegion(regionNumA);
-            yield return new WaitForSeconds(time);
-
-            myCS.DarkRegion(regionNumD);
-            yield return new WaitForSeconds(time);
-
-            myCS.UndarkRegions();
-            yield return new WaitForSeconds(time);
-        }
-        */
 
         IEnumerator FullAttackCoroutine(int numPlayer)
         {
@@ -150,7 +114,7 @@ namespace GameAI
                             if (reg.myPlayer != numPlayer)
                             {
                                 float success = CheckWorthToAttack(myCS.GetRM.GetAccRegions[ind].RegNum, reg.RegNum);
-                                if (success >= 1.0f)
+                                if (success >= 0.8f)
                                 {
                                     regionEnemiesArmiesSuccess.Add(success);
                                     regionEnemiesIndicies.Add(reg.RegNum);
@@ -173,10 +137,10 @@ namespace GameAI
 
                         //Debug.Log("Region " + attackerReg.ToString() + " attacks region " + attackReg.ToString());
                         myCS.DarkRegion(attackerReg);
-                        yield return new WaitForSeconds(0.4f);
+                        yield return new WaitForSeconds(0.3f);
 
                         myCS.DarkRegion(attackReg);
-                        yield return new WaitForSeconds(0.4f);
+                        yield return new WaitForSeconds(0.3f);
 
                         ClashScript CS = gameObject.GetComponent<ClashScript>();
                         bool res = CS.OnClash(myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[0]), myCS.GetRM.GetCoordByRegion(myCS.GetDarkenedRegions[1]));
@@ -185,7 +149,7 @@ namespace GameAI
                         yield return StartCoroutine(FindObjectOfType<GameUIViewController>().ShowAIClashAttack().Dices_AB_AI());
 
                         myCS.UndarkRegions();
-                        yield return new WaitForSeconds(0.4f);
+                        yield return new WaitForSeconds(0.3f);
                     }
                 }
 
@@ -211,39 +175,16 @@ namespace GameAI
 
         public void RestoreBeforeReload()
         {
+            regionAccessPlayerIndicies = new List<int>();
+            regionEnemiesIndicies = new List<int>();
+            regionEnemiesArmiesSuccess = new List<float>();
+
             cannotFurtherAttack = true;
             regionAccessPlayerIndicies.Clear();
             regionEnemiesIndicies.Clear();
             regionEnemiesArmiesSuccess.Clear();
         }
 
-        /*
-        IEnumerator PauseCoroutine(float time)
-        {
-            yield return new WaitForSeconds(time);
-            stageCntr++;
-            AttackRegion(attackerReg, attackReg);
-        }
-        */
-
-        /*
-        public void AddProportionalArmy(int numPlayer)
-        {    
-            // Get List of all Player Territories
-            regionAccessPlayerIndicies.Clear();
-            regionAccessPlayerIndicies = Enumerable.Range(0, myCS.GetRM.GetAccRegions.Count)
-                .Where(x => myCS.GetRM.GetAccRegions[x].myPlayer == numPlayer)
-                .ToList();
-
-            if (regionAccessPlayerIndicies.Count > 0)
-            {
-                // Get number of connected territories
-
-                // Add army to every territory
-            }
-
-        }
-        */
     }
 }
 

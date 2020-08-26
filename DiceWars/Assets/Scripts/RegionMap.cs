@@ -2,10 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using GameControls;
 
 
 namespace RegionStructure
 {
+    public struct SaveStruct
+    {
+        public int regNum;
+        public int regOwner;
+        public int dice_1_army;
+        public int dice_2_army;
+        public int dice_3_army;
+
+        public SaveStruct(int num, int owner, int army_one, int army_two, int army_three)
+        {
+            this.regNum = num;
+            this.regOwner = owner;
+            this.dice_1_army = army_one;
+            this.dice_2_army = army_two;
+            this.dice_3_army = army_three;
+        }
+    }
+
     public class RegionMap : MonoBehaviour
     {
 
@@ -26,6 +45,9 @@ namespace RegionStructure
         private bool[] visited;
         private List<int> visitedWithNum;
         private int sparceAttempts = 100;
+
+        [SerializeField]
+        private List<SaveStruct> saveList;
 
         public int[,] GetAdjMatrix
         {
@@ -93,6 +115,8 @@ namespace RegionStructure
 
         public void CreateNewZerofication()
         {
+            saveList = new List<SaveStruct>();
+
             allRegions = new List<Region>();
             accessRegions = new List<Region>();
             visited = new bool[regionsNum];
@@ -892,6 +916,27 @@ namespace RegionStructure
                     //Debug.Log("Condotion in");
                     DFSwithNum(i, value, ref playerRegs);
                 }
+            }
+        }
+
+        public void SaveInitInformation()
+        {
+            saveList.Clear();
+            foreach(Region rg in accessRegions)
+            {
+                saveList.Add(new SaveStruct(rg.RegNum, rg.myPlayer, rg.GetArmy(ControlScript.ArmyTypes.Dice_d6), rg.GetArmy(ControlScript.ArmyTypes.Dice_d12), rg.GetArmy(ControlScript.ArmyTypes.Dice_d20)));
+            }
+        }
+
+        public void RestoreInitInformation()
+        {
+            foreach(SaveStruct sv in saveList)
+            {
+                int rgInd = accessRegions.FindIndex(x => x.RegNum == sv.regNum);
+                accessRegions[rgInd].myPlayer = sv.regOwner;
+                accessRegions[rgInd].SetArmy(sv.dice_1_army, ControlScript.ArmyTypes.Dice_d6);
+                accessRegions[rgInd].SetArmy(sv.dice_2_army, ControlScript.ArmyTypes.Dice_d12);
+                accessRegions[rgInd].SetArmy(sv.dice_3_army, ControlScript.ArmyTypes.Dice_d20);
             }
         }
     }

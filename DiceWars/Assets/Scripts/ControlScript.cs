@@ -33,7 +33,6 @@ namespace GameControls
 
         private float timer;
         private RegionMap RM;
-        private RegionMap RM_D;
         private List<int> darkenedRegions;
 
         private bool canPickOnTiles;
@@ -89,6 +88,7 @@ namespace GameControls
         {
             CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
             graphData = CommonControl.instance.allGraphics;
+            CommonControl.instance.ZerofyAllReserve();
             borderTilemaps = new List<Tilemap>();
             darkenedRegions = new List<int>();
 
@@ -132,8 +132,11 @@ namespace GameControls
             InitiatePlayerDistribution();
             InitiateArmyDistribution();
 
+            RM.SaveInitInformation();
+
             DrawTestRegions();
             DrawBattleUnits();
+            
 
             // Start game routine
             //ControlSequenceOfActions CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
@@ -289,8 +292,6 @@ namespace GameControls
                     }
                 }
             }
-
-            RM_D = RM;
 
             UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
             uiSS.SetupSequeneceList();
@@ -474,9 +475,7 @@ namespace GameControls
                 if (CheckWinCase(initPlayerNum)) // Win case
                 {
                     canPickOnTiles = false;
-                    GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
-                    UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
-                    uiMS.SetStatus(true, initPlayerNum);
+                    StartCoroutine(WinCase());
                 }
             }
             else
@@ -486,11 +485,7 @@ namespace GameControls
                     // Stop AI
                     // ....
                     CSoA.EmergencyStop();
-                    
-
-                    GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
-                    UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
-                    uiMS.SetStatus(false);
+                    StartCoroutine(LooseCase());
                 }
             }
         }
@@ -597,25 +592,64 @@ namespace GameControls
 
         public void RestoreInitialGame()
         {
-            RM = RM_D;
+            RM.RestoreInitInformation();
 
-            CSoA.RestartSequence();
-
-            UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
-            uiSS.SetupSequeneceList();
+            CommonControl.instance.ZerofyAllReserve();
+            borderTilemaps.Clear();
+            darkenedRegions.Clear();
+            position = new Vector3Int(-1, 1, 0);
+            tileGrid = FindObjectOfType<Grid>(); Debug.Log("tileGrid: " + tileGrid + "   Region Map: " + RM);
+            gameTilemap = tileGrid.transform.GetChild(0).gameObject.GetComponent<Tilemap>();
+            borderTilemaps.Add(tileGrid.transform.GetChild(2).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(3).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(4).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(5).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(6).gameObject.GetComponent<Tilemap>());
+            borderTilemaps.Add(tileGrid.transform.GetChild(1).gameObject.GetComponent<Tilemap>());
+            diceTilemap = tileGrid.transform.GetChild(7).gameObject.GetComponent<Tilemap>();
+            canPickOnTiles = false;
+            // Clear all tilemaps
+            gameTilemap.ClearAllTiles();
+            diceTilemap.ClearAllTiles();
+            foreach (Tilemap tm in borderTilemaps)
+            {
+                tm.ClearAllTiles();
+            }
 
             DrawTestRegions();
             DrawBattleUnits();
 
+            UISequenceScript uiSS = FindObjectOfType<UISequenceScript>();
+            uiSS.SetupSequeneceList();
+
+            CSoA.RestartSequence();
             CSoA.GoAhead();
         }
 
         public void RestoreBeforeReload()
         {
-            //RM = null;
+            RM = null;
             //RM_D = null;
 
             CSoA.RestoreBeforeReload();
+        }
+
+        private IEnumerator WinCase()
+        {
+            yield return new WaitForSeconds(1.0f);
+
+            GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+            UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
+            uiMS.SetStatus(true, initPlayerNum);
+        }
+
+        private IEnumerator LooseCase()
+        {
+            yield return new WaitForSeconds(1.0f);
+
+            GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
+            UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
+            uiMS.SetStatus(false);
         }
     }
 }
