@@ -220,6 +220,9 @@ namespace UIControls
 
             yield return new WaitForSeconds(1.0f);
 
+            ControlScript CS = FindObjectOfType<ControlScript>();
+            CS.UndarkForHuman();
+
             OnDisable();
         }
     }

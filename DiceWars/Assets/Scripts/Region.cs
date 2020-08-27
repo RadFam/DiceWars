@@ -159,7 +159,7 @@ namespace RegionStructure
             xCenter /= tileCoords.Count;
             yCenter /= tileCoords.Count;
 
-            Vector3Int prefCenter = new Vector3Int(xCenter, yCenter, 0);
+            Vector3Int prefCenter = new Vector3Int(xCenter, yCenter+3, 0);
 
             var sortedTileCoords = tileCoords.OrderByDescending(x => Vector3Int.Distance(x, prefCenter)).Reverse().ToList();
 
@@ -173,7 +173,11 @@ namespace RegionStructure
                 xCenter = sortedTileCoords[ind].x;
                 yCenter = sortedTileCoords[ind].y;
 
-                yNeib = yCenter - 1;
+                xNeib = xCenter;
+                yNeib = yCenter;
+
+                /*
+                yNeib = yCenter - 2; //- 1;
                 if (Mathf.Abs(yCenter) % 2 == 0)
                 {
                     xNeib = xCenter - 1;
@@ -182,6 +186,7 @@ namespace RegionStructure
                 {
                     xNeib = xCenter;
                 }
+                */
 
                 tmpCenterNeib = new Vector3Int(xNeib, yNeib, 0);
 

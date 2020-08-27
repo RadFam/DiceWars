@@ -65,23 +65,6 @@ namespace GameControls
         // Start is called before the first frame update
         void Start()
         {
-            //CSoA = gameObject.GetComponent<ControlSequenceOfActions>();
-            //graphData = CommonControl.instance.allGraphics;
-            //borderTilemaps = new List<Tilemap>();
-            //darkenedRegions = new List<int>();
-
-            //cam = Camera.main;
-
-            //position = new Vector3Int(-1, 1, 0);
-
-            //timer = 0.0f;
-            //RM = gameObject.GetComponent<RegionMap>();
-
-            //humanMove = false;
-
-            //RM.GenerateRegionsMap();
-            //InitiatePlayerDistribution();
-            //InitiateArmyDistribution();
         }
 
         public void ActionsAfterSceneLoad()
@@ -358,10 +341,12 @@ namespace GameControls
 
                     ChangeArmyDistribution(res);
                 }
-
-                UndarkRegions();
-
-                canPickOnTiles = true;
+                else
+                {
+                    UndarkRegions();
+                    canPickOnTiles = true;
+                }
+                
             }
         }
 
@@ -650,6 +635,17 @@ namespace GameControls
             GameUIViewController gameUIVC = FindObjectOfType<GameUIViewController>();
             UIMessageScript uiMS = gameUIVC.ShowMessageFrame();
             uiMS.SetStatus(false);
+        }
+
+        public void UndarkForHuman()
+        {
+            UndarkRegions();
+            canPickOnTiles = true;
+        }
+
+        public void HumanNextStep()
+        {
+
         }
     }
 }
