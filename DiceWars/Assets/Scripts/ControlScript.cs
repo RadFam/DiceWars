@@ -158,6 +158,14 @@ namespace GameControls
             
         }
 
+        public void PassNextStep() // Пропуск своего хода. Переход к следующему игроку
+        {
+            if (canPickOnTiles)
+            {
+                CSoA.GoAhead();
+            }
+        }
+
         // Отрисовка всего игрового поля 
         public void DrawTestRegions()
         {

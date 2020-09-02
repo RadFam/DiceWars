@@ -42,6 +42,12 @@ namespace UIControls
             return uiMs;
         }
 
+        public void OnPassNextPlayer()
+        {
+            ControlScript CS = FindObjectOfType<ControlScript>();
+            CS.PassNextStep();
+        }
+
         public void OnRestartGame()
         {
             uiMs.gameObject.SetActive(false);
